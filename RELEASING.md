@@ -14,6 +14,18 @@ You will need permission in sonatype to push to `com.lightbend.akka` groupd ID.
  1. Login to [Bintray](https://bintray.com/akka/maven/akka-persistence-couchbase) and sync artifacts to Maven Central:
      * Go to the 'Maven Central' tab and use your sonatype credentials. This can take a long time (you can check https://oss.sonatype.org/#stagingRepositories for progress)
  1. Close the milestone for this release and start a new one.
- 1. Build docs `docs/paradox` and copy to a directory with the version of the plugin on akka.io, link `current` to that directory
-    (follow https://github.com/akka/alpakka-kafka/blob/master/docs/release-train-issue-template.md#publish-docs-to-gustav)
+ 1. For the documentation publishing step, you will have to have access to the Gustav docs server.
+     1. Checkout the new tag and publish reference docs to Gustav by running `docs/publishRsync`
+     1. Log into `gustav.akka.io` as `akkarepo`
+         1. update the `current` and `1.0` links to point to the latest version with
+             ```
+             ln -nsf <version> www/docs/akka-persistence-couchbase/current
+             ln -nsf <version> www/docs/akka-persistence-couchbase/1.0
+             ```
+         1. check changes and commit the new version to the local git repository
+             ```
+             cd ~/www
+             git add docs/akka-persistence-couchbase/1.0 docs/akka-persistence-couchbase/current docs/akka-persistence-couchbase/<version>
+             git commit -m "Akka Persistence Couchbase <version>"
+             ```
  1. Ask someone in the Akka team to update the [Lightbend Platform "Library build dependencies" page](https://developer.lightbend.com/docs/lightbend-platform/introduction/getting-help/build-dependencies.html#_akka_persistence_couchbase) (requires Lightbend private GitHub permission). Only for stable releases, not milestones/RCs.

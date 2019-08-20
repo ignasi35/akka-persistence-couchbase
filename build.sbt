@@ -65,7 +65,8 @@ def common: Seq[Setting[_]] = Seq(
   testOptions += Tests.Argument(TestFrameworks.JUnit, "-v", "-a"),
   // disable parallel tests
   parallelExecution in Test := false,
-  fork := true
+  fork := true,
+  projectInfoVersion := (if (isSnapshot.value) "snapshot" else version.value)
 )
 
 lazy val dontPublish = Seq(
@@ -180,12 +181,14 @@ lazy val `lagom-persistence-couchbase-scaladsl` = (project in file("lagom-persis
 
 lazy val docs = project
   .in(file("docs"))
-  .enablePlugins(AkkaParadoxPlugin)
+  .enablePlugins(AkkaParadoxPlugin, ParadoxSitePlugin, PublishRsyncPlugin)
   .settings(common)
   .settings(dontPublish)
   .settings(
     name := "Akka Persistence Couchbase",
     crossScalaVersions := Seq(Dependencies.Scala212),
+    previewPath := (Paradox / siteSubdirName).value,
+    Paradox / siteSubdirName := s"docs/akka-persistence-couchbase/${projectInfoVersion.value}",
     paradoxGroups := Map("Language" -> Seq("Java", "Scala")),
     paradoxProperties ++= Map(
       "akka.version" -> Dependencies.AkkaVersion,
@@ -196,6 +199,8 @@ lazy val docs = project
       "scaladoc.akka.base_url" -> s"https://doc.akka.io/api/akka/${Dependencies.AkkaVersion}",
       "scaladoc.com.typesafe.config.base_url" -> s"https://lightbend.github.io/config/latest/api/"
     ),
-    resolvers += Resolver.jcenterRepo
+    resolvers += Resolver.jcenterRepo,
+    publishRsyncArtifact := makeSite.value -> "www/",
+    publishRsyncHost := "akkarepo@gustav.akka.io"
   )
   .dependsOn(`lagom-persistence-couchbase-scaladsl`, `lagom-persistence-couchbase-javadsl`)
