@@ -27,4 +27,4 @@ The table below shows Akka Persistence Couchbase’s direct dependencies and the
 
 Please feel free to contribute to Akka and Akka Persistence Couchbase Documentation by reporting issues you identify, or by suggesting changes to the code. Please refer to our [contributing instructions](https://github.com/akka/akka/blob/master/CONTRIBUTING.md) to learn how it can be done.
 
-We want Akka to strive in a welcoming and open atmosphere and expect all contributors to respect our [code of conduct](https://github.com/akka/akka/blob/master/CODE_OF_CONDUCT.md).
+We want Akka to strive in a welcoming and open atmosphere and expect all contributors to respect our [code of conduct](https://www.lightbend.com/conduct).
