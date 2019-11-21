@@ -1,6 +1,7 @@
 /*
- * Copyright (C) 2009-2018 Lightbend Inc. <https://www.lightbend.com>
+ * Copyright (C) 2018-2019 Lightbend Inc. <http://www.lightbend.com>
  */
+
 package docs.home.persistence
 import com.lightbend.lagom.scaladsl.persistence.{AggregateEvent, AggregateEventShards, AggregateEventTag}
 

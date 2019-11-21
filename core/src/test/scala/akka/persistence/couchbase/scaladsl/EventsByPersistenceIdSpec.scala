@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Lightbend Inc. <http://www.lightbend.com>
+ * Copyright (C) 2018-2019 Lightbend Inc. <http://www.lightbend.com>
  */
 
 package akka.persistence.couchbase.scaladsl
@@ -11,9 +11,7 @@ import akka.stream.scaladsl.Sink
 import akka.stream.testkit.scaladsl.TestSink
 
 class EventsByPersistenceIdSpec extends AbstractCouchbaseSpec("EventsByPersistenceIdSpec") {
-
   "Couchbase query EventsByPersistenceId" must {
-
     "find existing events" in new Setup {
       override def initialPersistedEvents = 3
 
@@ -119,7 +117,6 @@ class EventsByPersistenceIdSpec extends AbstractCouchbaseSpec("EventsByPersisten
         .request(5)
         .expectNext(s"$pid-3")
         .expectComplete() // e-4 not seen
-
     }
 
     "not see new events after the query was triggered, across page size" in new Setup {
@@ -167,7 +164,6 @@ class EventsByPersistenceIdSpec extends AbstractCouchbaseSpec("EventsByPersisten
         // last events that was in db when query was triggered
         .expectNextN(expectedEvents)
         .expectComplete() // but not the event that was written after query is not seen
-
     }
 
     "only deliver what requested if there is more in the buffer" in new Setup {
@@ -266,11 +262,9 @@ class EventsByPersistenceIdSpec extends AbstractCouchbaseSpec("EventsByPersisten
         streamProbe.expectComplete()
       }
     }
-
   }
 
   "Couchbase live query EventsByPersistenceId" must {
-
     "find new events" in new Setup {
       override def initialPersistedEvents = 3
       val streamProbe = readingOurOwnWrites {

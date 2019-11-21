@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Lightbend Inc. <http://www.lightbend.com>
+ * Copyright (C) 2018-2019 Lightbend Inc. <http://www.lightbend.com>
  */
 
 package akka.persistence.couchbase
@@ -21,7 +21,6 @@ case class MyEventAsync(n: Int)
 case class MyEventNative(n: Int)
 
 class MyEventAsyncSerializer(system: ExtendedActorSystem) extends AsyncSerializerWithStringManifest(system) {
-
   import system.dispatcher
 
   override def identifier: Int = 1984
@@ -40,7 +39,6 @@ class MyEventAsyncSerializer(system: ExtendedActorSystem) extends AsyncSerialize
         case "Woo!" => MyEventAsync(BigInt(bytes).toInt)
       }
     }
-
 }
 
 class MyEventNativeJsonSerializer extends JsonSerializer {
@@ -61,7 +59,6 @@ class MyEventNativeJsonSerializer extends JsonSerializer {
 }
 
 class SerializationSpec extends WordSpec with Matchers with BeforeAndAfterAll with ScalaFutures {
-
   implicit val system = ActorSystem(
     "SerializationSpec",
     ConfigFactory.parseString("""
@@ -76,7 +73,6 @@ class SerializationSpec extends WordSpec with Matchers with BeforeAndAfterAll wi
   val serialization = SerializationExtension(system)
 
   "The serialization of events" must {
-
     "serialize and deserialize events" in {
       val event = MyEvent(42)
       val serializedEvent = SerializedMessage.serialize(serialization, event).futureValue
@@ -104,7 +100,6 @@ class SerializationSpec extends WordSpec with Matchers with BeforeAndAfterAll wi
       val deserialized = SerializedMessage.fromJsonObject(serialization, json).futureValue
       deserialized should ===(event)
     }
-
   }
 
   override def afterAll(): Unit =

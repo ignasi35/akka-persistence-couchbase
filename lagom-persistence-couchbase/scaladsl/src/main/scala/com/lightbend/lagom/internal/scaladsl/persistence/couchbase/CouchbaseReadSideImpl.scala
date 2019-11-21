@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Lightbend Inc. <http://www.lightbend.com>
+ * Copyright (C) 2018-2019 Lightbend Inc. <http://www.lightbend.com>
  */
 
 package com.lightbend.lagom.internal.scaladsl.persistence.couchbase
@@ -21,11 +21,11 @@ import scala.reflect.ClassTag
 /**
  * Internal API
  */
-private[lagom] final class CouchbaseReadSideImpl(system: ActorSystem,
-                                                 couchbaseSession: CouchbaseSession,
-                                                 offsetStore: CouchbaseOffsetStore)
-    extends CouchbaseReadSide {
-
+private[lagom] final class CouchbaseReadSideImpl(
+    system: ActorSystem,
+    couchbaseSession: CouchbaseSession,
+    offsetStore: CouchbaseOffsetStore
+) extends CouchbaseReadSide {
   private val dispatcher = system.settings.config.getString("lagom.persistence.read-side.use-dispatcher")
   implicit val ec: MessageDispatcher = system.dispatchers.lookup(dispatcher)
 
@@ -60,12 +60,14 @@ private[lagom] final class CouchbaseReadSideImpl(system: ActorSystem,
       }
 
       override def build(): ReadSideHandler[Event] =
-        new CouchbaseReadSideHandler[Event](couchbaseSession,
-                                            offsetStore,
-                                            handlers,
-                                            globalPrepare,
-                                            prepare,
-                                            readSideId,
-                                            dispatcher)
+        new CouchbaseReadSideHandler[Event](
+          couchbaseSession,
+          offsetStore,
+          handlers,
+          globalPrepare,
+          prepare,
+          readSideId,
+          dispatcher
+        )
     }
 }

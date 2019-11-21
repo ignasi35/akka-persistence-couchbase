@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Lightbend Inc. <http://www.lightbend.com>
+ * Copyright (C) 2018-2019 Lightbend Inc. <http://www.lightbend.com>
  */
 
 package akka.persistence.couchbase
@@ -11,19 +11,20 @@ import com.typesafe.config.Config
 
 import scala.concurrent.duration._
 
-final case class CouchbaseJournalSettings private (sessionSettings: CouchbaseSessionSettings,
-                                                   bucket: String,
-                                                   writeSettings: CouchbaseWriteSettings,
-                                                   replayPageSize: Int,
-                                                   readTimeout: FiniteDuration,
-                                                   warnAboutMissingIndexes: Boolean)
+final case class CouchbaseJournalSettings private (
+    sessionSettings: CouchbaseSessionSettings,
+    bucket: String,
+    writeSettings: CouchbaseWriteSettings,
+    replayPageSize: Int,
+    readTimeout: FiniteDuration,
+    warnAboutMissingIndexes: Boolean
+)
 
 /**
  * INTERNAL API
  */
 @InternalApi
 object CouchbaseJournalSettings {
-
   def apply(config: Config): CouchbaseJournalSettings = {
     val clientConfig = config.getConfig("connection")
     val bucket = config.getString("write.bucket")
@@ -33,12 +34,14 @@ object CouchbaseJournalSettings {
     val replayPageSize = config.getInt("write.replay-page-size")
     val warnAboutMissingIndexes = config.getBoolean("write.warn-about-missing-indexes")
 
-    CouchbaseJournalSettings(sessionSettings,
-                             bucket,
-                             writeSettings,
-                             replayPageSize,
-                             readTimeout,
-                             warnAboutMissingIndexes)
+    CouchbaseJournalSettings(
+      sessionSettings,
+      bucket,
+      writeSettings,
+      replayPageSize,
+      readTimeout,
+      warnAboutMissingIndexes
+    )
   }
 
   def parseWriteSettings(config: Config): CouchbaseWriteSettings =
@@ -72,13 +75,15 @@ object CouchbaseJournalSettings {
  * INTERNAL API
  */
 @InternalApi
-private[couchbase] final case class CouchbaseReadJournalSettings(sessionSettings: CouchbaseSessionSettings,
-                                                                 bucket: String,
-                                                                 pageSize: Int,
-                                                                 liveQueryInterval: FiniteDuration,
-                                                                 eventByTagSettings: EventByTagSettings,
-                                                                 dispatcher: String,
-                                                                 warnAboutMissingIndexes: Boolean)
+private[couchbase] final case class CouchbaseReadJournalSettings(
+    sessionSettings: CouchbaseSessionSettings,
+    bucket: String,
+    pageSize: Int,
+    liveQueryInterval: FiniteDuration,
+    eventByTagSettings: EventByTagSettings,
+    dispatcher: String,
+    warnAboutMissingIndexes: Boolean
+)
 final case class EventByTagSettings(eventualConsistencyDelay: FiniteDuration, getParallelism: Int)
 
 /**
@@ -86,7 +91,6 @@ final case class EventByTagSettings(eventualConsistencyDelay: FiniteDuration, ge
  */
 @InternalApi
 private[couchbase] object CouchbaseReadJournalSettings {
-
   def apply(config: Config): CouchbaseReadJournalSettings = {
     val clientConfig = config.getConfig("connection")
     val bucket = config.getString("write.bucket")
@@ -105,13 +109,15 @@ private[couchbase] object CouchbaseReadJournalSettings {
 
     val warnAboutMissingIndexes = config.getBoolean("write.warn-about-missing-indexes")
 
-    CouchbaseReadJournalSettings(sessionSettings,
-                                 bucket,
-                                 pageSize,
-                                 liveQueryInterval,
-                                 eventByTagSettings,
-                                 dispatcher,
-                                 warnAboutMissingIndexes)
+    CouchbaseReadJournalSettings(
+      sessionSettings,
+      bucket,
+      pageSize,
+      liveQueryInterval,
+      eventByTagSettings,
+      dispatcher,
+      warnAboutMissingIndexes
+    )
   }
 }
 
@@ -119,17 +125,18 @@ private[couchbase] object CouchbaseReadJournalSettings {
  * INTERNAL API
  */
 @InternalApi
-private[couchbase] final case class CouchbaseSnapshotSettings(sessionSettings: CouchbaseSessionSettings,
-                                                              bucket: String,
-                                                              writeSettings: CouchbaseWriteSettings,
-                                                              warnAboutMissingIndexes: Boolean)
+private[couchbase] final case class CouchbaseSnapshotSettings(
+    sessionSettings: CouchbaseSessionSettings,
+    bucket: String,
+    writeSettings: CouchbaseWriteSettings,
+    warnAboutMissingIndexes: Boolean
+)
 
 /**
  * INTERNAL API
  */
 @InternalApi
 private[couchbase] object CouchbaseSnapshotSettings {
-
   def apply(config: Config): CouchbaseSnapshotSettings = {
     val clientConfig = config.getConfig("connection")
     val bucket = config.getString("snapshot.bucket")

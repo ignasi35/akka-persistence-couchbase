@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Lightbend Inc. <http://www.lightbend.com>
+ * Copyright (C) 2018-2019 Lightbend Inc. <http://www.lightbend.com>
  */
 
 package com.lightbend.lagom.scaladsl.persistence.couchbase
@@ -38,19 +38,16 @@ trait CouchbasePersistenceComponents
  * Write-side persistence Couchbase components (for compile-time injection).
  */
 trait WriteSideCouchbasePersistenceComponents extends WriteSidePersistenceComponents {
-
   override lazy val persistentEntityRegistry: PersistentEntityRegistry =
     new CouchbasePersistentEntityRegistry(actorSystem)
 
   def serviceLocator: ServiceLocator
-
 }
 
 /**
  * Read-side persistence Couchbase components (for compile-time injection).
  */
 trait ReadSideCouchbasePersistenceComponents extends ReadSidePersistenceComponents {
-
   private val log = Logging(actorSystem, classOf[ReadSideCouchbasePersistenceComponents])
 
   CouchbaseConfigValidator.validateBucket("lagom.persistence.read-side.couchbase", configuration.underlying, log)

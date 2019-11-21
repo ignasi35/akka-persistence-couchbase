@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Lightbend Inc. <http://www.lightbend.com>
+ * Copyright (C) 2018-2019 Lightbend Inc. <http://www.lightbend.com>
  */
 
 package com.lightbend.lagom.javadsl.persistence.couchbase
@@ -14,7 +14,6 @@ import com.lightbend.lagom.persistence.{ActorSystemSpec, PersistenceSpec}
 import com.typesafe.config.{Config, ConfigFactory}
 
 class CouchbasePersistenceSpec private (system: ActorSystem) extends ActorSystemSpec(system) with CouchbaseBucketSetup {
-
   def this(testName: String, config: Config) =
     this(
       ActorSystem(
@@ -37,5 +36,4 @@ class CouchbasePersistenceSpec private (system: ActorSystem) extends ActorSystem
     val cluster = Cluster(system)
     cluster.join(cluster.selfAddress)
   }
-
 }

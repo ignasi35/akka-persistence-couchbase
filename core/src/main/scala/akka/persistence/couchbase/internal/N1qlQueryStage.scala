@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Lightbend Inc. <http://www.lightbend.com>
+ * Copyright (C) 2018-2019 Lightbend Inc. <http://www.lightbend.com>
  */
 
 package akka.persistence.couchbase.internal
@@ -34,22 +34,21 @@ private[akka] object N1qlQueryStage {
     def call(t: AsyncN1qlQueryResult): Observable[AsyncN1qlQueryRow] =
       t.rows()
   }
-
 }
 
 /**
  * INTERNAL API
  */
 @InternalApi
-private[akka] final class N1qlQueryStage[S](live: Boolean,
-                                            settings: N1qlQueryStage.N1qlQuerySettings,
-                                            initialQuery: N1qlQuery,
-                                            bucket: AsyncBucket,
-                                            initialState: S,
-                                            nextQuery: S => Option[N1qlQuery],
-                                            updateState: (S, AsyncN1qlQueryRow) => S)
-    extends GraphStage[SourceShape[AsyncN1qlQueryRow]] {
-
+private[akka] final class N1qlQueryStage[S](
+    live: Boolean,
+    settings: N1qlQueryStage.N1qlQuerySettings,
+    initialQuery: N1qlQuery,
+    bucket: AsyncBucket,
+    initialState: S,
+    nextQuery: S => Option[N1qlQuery],
+    updateState: (S, AsyncN1qlQueryRow) => S
+) extends GraphStage[SourceShape[AsyncN1qlQueryRow]] {
   import N1qlQueryStage._
 
   val out: Outlet[AsyncN1qlQueryRow] = Outlet("LiveN1qlQuery.out")
@@ -72,10 +71,12 @@ private[akka] final class N1qlQueryStage[S](live: Boolean,
       }
 
       private val completeCb = getAsyncCallback[Unit] { _ =>
-        log.debug("Query complete. Remaining buffer: {}, rowsInCurrentQuery: {}, pageSize: {}",
-                  buffer,
-                  rowsInCurrentQuery,
-                  settings.pageSize)
+        log.debug(
+          "Query complete. Remaining buffer: {}, rowsInCurrentQuery: {}, pageSize: {}",
+          buffer,
+          rowsInCurrentQuery,
+          settings.pageSize
+        )
         if (rowsInCurrentQuery == settings.pageSize)
           state = IdleAfterFullPage
         else
@@ -186,5 +187,4 @@ private[akka] final class N1qlQueryStage[S](live: Boolean,
 
       setHandler(out, this)
     }
-
 }

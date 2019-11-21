@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Lightbend Inc. <http://www.lightbend.com>
+ * Copyright (C) 2018-2019 Lightbend Inc. <http://www.lightbend.com>
  */
 
 package akka.persistence.couchbase
@@ -13,7 +13,6 @@ import com.couchbase.client.java.transcoder.JacksonTransformers
  * Subclass, implement and register through the regular Akka serialization infrastructure to use.
  */
 abstract class JsonSerializer extends SerializerWithStringManifest {
-
   def toJson(o: AnyRef): JsonObject
   def fromJson(json: JsonObject, manifest: String): AnyRef
 

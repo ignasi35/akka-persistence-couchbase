@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Lightbend Inc. <http://www.lightbend.com>
+ * Copyright (C) 2018-2019 Lightbend Inc. <http://www.lightbend.com>
  */
 
 package com.lightbend.lagom.scaladsl.persistence.couchbase
@@ -17,7 +17,6 @@ import scala.concurrent.{ExecutionContext, Future}
 object TestEntityReadSide {
   class TestEntityReadSideProcessor(system: ActorSystem, readSide: CouchbaseReadSide)
       extends ReadSideProcessor[TestEntity.Evt] {
-
     @volatile private var prepared = false
 
     def buildHandler(): ReadSideHandler[TestEntity.Evt] = {
@@ -43,14 +42,13 @@ object TestEntityReadSide {
             Future {
               prepared = true
               Done
-          }
+            }
         )
         .setEventHandler[TestEntity.Appended](updateCount)
         .build()
     }
 
     def aggregateTags: Set[AggregateEventTag[TestEntity.Evt]] = TestEntity.Evt.aggregateEventShards.allTags
-
   }
 
   def getCount(session: CouchbaseSession, entityId: String)(implicit ec: ExecutionContext): Future[Long] =
@@ -58,11 +56,9 @@ object TestEntityReadSide {
       case Some(l) => l.content().getLong("count")
       case None => 0L
     }
-
 }
 
 class TestEntityReadSide(system: ActorSystem, couchbase: CouchbaseSession) {
-
   import system.dispatcher
 
   def getAppendCount(entityId: String): Future[Long] =

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Lightbend Inc. <http://www.lightbend.com>
+ * Copyright (C) 2018-2019 Lightbend Inc. <http://www.lightbend.com>
  */
 
 package akka.persistence.couchbase
@@ -29,7 +29,6 @@ import com.typesafe.config.Config
 import scala.concurrent.{ExecutionContext, Future}
 
 final class CouchbaseSnapshotStore(cfg: Config, configPath: String) extends SnapshotStore with AsyncCouchbaseSession {
-
   private val settings: CouchbaseSnapshotSettings = {
     // shared config is one level above the journal specific
     val commonPath = configPath.replaceAll("""\.snapshot""", "")
@@ -156,5 +155,4 @@ final class CouchbaseSnapshotStore(cfg: Config, configPath: String) extends Snap
 
     filter
   }
-
 }

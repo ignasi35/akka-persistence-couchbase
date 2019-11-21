@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Lightbend Inc. <http://www.lightbend.com>
+ * Copyright (C) 2018-2019 Lightbend Inc. <http://www.lightbend.com>
  */
 
 package com.lightbend.lagom.scaladsl.persistence.couchbase
@@ -36,7 +36,6 @@ class CouchbaseClusteredPersistentEntitySpecMultiJvmNode3 extends CouchbaseClust
 
 class CouchbaseClusteredPersistentEntitySpec
     extends AbstractClusteredPersistentEntitySpec(CouchbaseClusteredPersistentEntityConfig) {
-
   import com.lightbend.lagom.scaladsl.persistence.couchbase.CouchbaseClusteredPersistentEntityConfig._
 
   override protected def atStartup(): Unit = {

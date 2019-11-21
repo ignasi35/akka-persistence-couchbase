@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Lightbend Inc. <http://www.lightbend.com>
+ * Copyright (C) 2018-2019 Lightbend Inc. <http://www.lightbend.com>
  */
 
 package com.lightbend.lagom.internal.scaladsl.persistence.couchbase
@@ -15,7 +15,6 @@ import com.lightbend.lagom.internal.scaladsl.persistence.AbstractPersistentEntit
  */
 private[lagom] final class CouchbasePersistentEntityRegistry(system: ActorSystem)
     extends AbstractPersistentEntityRegistry(system) {
-
   private val log = Logging.getLogger(system, getClass)
 
   CouchbaseConfigValidator.validateBucket("couchbase-journal.write", system.settings.config, log)

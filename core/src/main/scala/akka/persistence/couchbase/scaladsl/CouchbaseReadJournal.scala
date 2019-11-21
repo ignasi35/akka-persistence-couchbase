@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Lightbend Inc. <http://www.lightbend.com>
+ * Copyright (C) 2018-2019 Lightbend Inc. <http://www.lightbend.com>
  */
 
 package akka.persistence.couchbase.scaladsl
@@ -37,7 +37,6 @@ import scala.concurrent.duration.Duration
 import scala.concurrent.duration._
 
 object CouchbaseReadJournal {
-
   /**
    * The default identifier for [[CouchbaseReadJournal]] to be used with
    * `akka.persistence.query.PersistenceQuery#getReadJournalFor`.
@@ -74,7 +73,6 @@ final class CouchbaseReadJournal(eas: ExtendedActorSystem, config: Config, confi
     with CurrentPersistenceIdsQuery
     with PersistenceIdsQuery
     with CouchbaseSchema.Queries {
-
   private implicit val system = eas
   private val log = Logging(system, configPath)
 
@@ -109,7 +107,6 @@ final class CouchbaseReadJournal(eas: ExtendedActorSystem, config: Config, confi
       session <- asyncSession
       indexes <- session.listIndexes().runWith(Sink.seq)
     } yield {
-
       val indexNames = indexes.map(_.name()).toSet
       Set("tags", "tag-seq-nrs").foreach(
         requiredIndex =>
@@ -117,7 +114,7 @@ final class CouchbaseReadJournal(eas: ExtendedActorSystem, config: Config, confi
             log.warning(
               "Missing the [{}] index, the events by tag query will not work without it, see plugin documentation for details",
               requiredIndex
-          )
+            )
       )
     }
     checkF.onComplete(_ => materializer.shutdown())
@@ -385,7 +382,6 @@ final class CouchbaseReadJournal(eas: ExtendedActorSystem, config: Config, confi
             EventEnvelope(Offset.timeBasedUUID(tpr.offset), tpr.pr.persistenceId, tpr.pr.sequenceNr, tpr.pr.payload) :: Nil
           }
         }
-
     }
 
   /**
@@ -445,6 +441,5 @@ final class CouchbaseReadJournal(eas: ExtendedActorSystem, config: Config, confi
           }
         }
       }
-
   }
 }

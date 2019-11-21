@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Lightbend Inc. <http://www.lightbend.com>
+ * Copyright (C) 2018-2019 Lightbend Inc. <http://www.lightbend.com>
  */
 
 package akka.persistence.couchbase.internal
@@ -14,7 +14,6 @@ import akka.annotation.InternalApi
  */
 @InternalApi
 private[akka] object UUIDTimestamp {
-
   val GMT = ZoneId.of("GMT")
 
   // UUID v1 timestamp must be in 100-nanoseconds interval since Oct 15 1582 00:00:00.000
@@ -48,7 +47,6 @@ private[akka] object UUIDTimestamp {
  */
 @InternalApi
 private[akka] final case class UUIDTimestamp(nanoTimestamp: Long) extends AnyVal with Ordered[UUIDTimestamp] {
-
   import UUIDTimestamp._
 
   /**

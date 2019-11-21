@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Lightbend Inc. <http://www.lightbend.com>
+ * Copyright (C) 2018-2019 Lightbend Inc. <http://www.lightbend.com>
  */
 
 package akka.persistence.couchbase.javadsl;
@@ -50,15 +50,15 @@ public class CouchbaseReadJournalTest {
     }
   }
 
-  static Config config = ConfigFactory.parseString(
-      "couchbase-journal.write.event-adapters { \n" +
-          "  test-tagger = \"akka.persistence.couchbase.javadsl.CouchbaseReadJournalTest$TestTagger\" \n" +
-          "} \n " +
-
-          "couchbase-journal.write.event-adapter-bindings { \n" +
-          "  \"java.lang.String\" = test-tagger \n" +
-          "} \n"
-  ).withFallback(ConfigFactory.load());
+  static Config config =
+      ConfigFactory.parseString(
+              "couchbase-journal.write.event-adapters { \n"
+                  + "  test-tagger = \"akka.persistence.couchbase.javadsl.CouchbaseReadJournalTest$TestTagger\" \n"
+                  + "} \n "
+                  + "couchbase-journal.write.event-adapter-bindings { \n"
+                  + "  \"java.lang.String\" = test-tagger \n"
+                  + "} \n")
+          .withFallback(ConfigFactory.load());
 
   static ActorSystem system;
   static ActorMaterializer mat;
@@ -72,12 +72,12 @@ public class CouchbaseReadJournalTest {
     mat = ActorMaterializer.create(system);
 
     // #read-journal-access
-    queries = PersistenceQuery.get(system)
-        .getReadJournalFor(CouchbaseReadJournal.class, CouchbaseReadJournal.Identifier());
+    queries =
+        PersistenceQuery.get(system)
+            .getReadJournalFor(CouchbaseReadJournal.class, CouchbaseReadJournal.Identifier());
     // #read-journal-access
 
-    clusterConnection = CouchbaseClusterConnection.connect()
-        .cleanUp();
+    clusterConnection = CouchbaseClusterConnection.connect().cleanUp();
 
     couchbaseSession = clusterConnection.couchbaseSession().asJava();
   }
@@ -101,74 +101,86 @@ public class CouchbaseReadJournalTest {
 
   @Test
   public void test01_startEventsByPersistenceIdQuery() {
-    new TestKit(system) {{
-      ActorRef a = system.actorOf(TestActor.props("a"));
-      a.tell("a-1", getRef());
-      expectMsg("a-1-done");
+    new TestKit(system) {
+      {
+        ActorRef a = system.actorOf(TestActor.props("a"));
+        a.tell("a-1", getRef());
+        expectMsg("a-1-done");
 
-      awaitAssert(() -> {
-        Source<String, NotUsed> src = queries
-            .eventsByPersistenceId("a", 0L, Long.MAX_VALUE)
-            .map(EventEnvelope::persistenceId);
+        awaitAssert(
+            () -> {
+              Source<String, NotUsed> src =
+                  queries
+                      .eventsByPersistenceId("a", 0L, Long.MAX_VALUE)
+                      .map(EventEnvelope::persistenceId);
 
-        TestSubscriber.Probe<String> probe = src.runWith(TestSink.<String>probe(system), mat);
-        probe.request(10);
-        probe.expectNext("a");
-        return probe.cancel();
-      });
-    }};
+              TestSubscriber.Probe<String> probe = src.runWith(TestSink.<String>probe(system), mat);
+              probe.request(10);
+              probe.expectNext("a");
+              return probe.cancel();
+            });
+      }
+    };
   }
 
   @Test
   public void test02_startCurrentEventsByPersistenceIdQuery() {
-    new TestKit(system) {{
-      ActorRef a = system.actorOf(TestActor.props("b"));
-      a.tell("b-1", getRef());
-      expectMsg("b-1-done");
+    new TestKit(system) {
+      {
+        ActorRef a = system.actorOf(TestActor.props("b"));
+        a.tell("b-1", getRef());
+        expectMsg("b-1-done");
 
-      awaitAssert(() -> {
-        Source<String, NotUsed> src = queries
-            .currentEventsByPersistenceId("b", 0L, Long.MAX_VALUE)
-            .map(EventEnvelope::persistenceId);
+        awaitAssert(
+            () -> {
+              Source<String, NotUsed> src =
+                  queries
+                      .currentEventsByPersistenceId("b", 0L, Long.MAX_VALUE)
+                      .map(EventEnvelope::persistenceId);
 
-        TestSubscriber.Probe<String> probe = src.runWith(TestSink.<String>probe(system), mat);
-        probe.request(10);
-        probe.expectNext("b");
-        return probe.expectComplete();
-      });
-    }};
+              TestSubscriber.Probe<String> probe = src.runWith(TestSink.<String>probe(system), mat);
+              probe.request(10);
+              probe.expectNext("b");
+              return probe.expectComplete();
+            });
+      }
+    };
   }
 
   @Test
   public void test03_StartEventsByTagQuery() {
-    new TestKit(system) {{
-      Source<String, NotUsed> src = queries
-          .eventsByTag("a", Offset.noOffset())
-          .map(EventEnvelope::persistenceId);
+    new TestKit(system) {
+      {
+        Source<String, NotUsed> src =
+            queries.eventsByTag("a", Offset.noOffset()).map(EventEnvelope::persistenceId);
 
-      awaitAssert(() -> {
-        TestSubscriber.Probe<String> probe = src.runWith(TestSink.<String>probe(system), mat);
-        probe.request(10);
-        probe.expectNext("a");
-        probe.expectNoMessage(Duration.ofMillis(100));
-        return probe.cancel();
-      });
-    }};
+        awaitAssert(
+            () -> {
+              TestSubscriber.Probe<String> probe = src.runWith(TestSink.<String>probe(system), mat);
+              probe.request(10);
+              probe.expectNext("a");
+              probe.expectNoMessage(Duration.ofMillis(100));
+              return probe.cancel();
+            });
+      }
+    };
   }
 
   @Test
   public void test04_startCurrentEventsByTagQuery() {
-    new TestKit(system) {{
-      Source<String, NotUsed> src = queries
-          .currentEventsByTag("a", Offset.noOffset())
-          .map(EventEnvelope::persistenceId);
+    new TestKit(system) {
+      {
+        Source<String, NotUsed> src =
+            queries.currentEventsByTag("a", Offset.noOffset()).map(EventEnvelope::persistenceId);
 
-      awaitAssert(() -> {
-        TestSubscriber.Probe<String> probe = src.runWith(TestSink.<String>probe(system), mat);
-        probe.request(10);
-        probe.expectNext("a");
-        return probe.expectComplete();
-      });
-    }};
+        awaitAssert(
+            () -> {
+              TestSubscriber.Probe<String> probe = src.runWith(TestSink.<String>probe(system), mat);
+              probe.request(10);
+              probe.expectNext("a");
+              return probe.expectComplete();
+            });
+      }
+    };
   }
 }

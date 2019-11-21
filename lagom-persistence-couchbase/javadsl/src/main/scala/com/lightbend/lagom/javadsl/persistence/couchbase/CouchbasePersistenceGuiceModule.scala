@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Lightbend Inc. <http://www.lightbend.com>
+ * Copyright (C) 2018-2019 Lightbend Inc. <http://www.lightbend.com>
  */
 
 package com.lightbend.lagom.javadsl.persistence.couchbase
@@ -15,7 +15,6 @@ import com.google.inject.{AbstractModule, TypeLiteral}
  * InitServiceLocatorHolder, since Guice doesn't support @PostConstruct.
  */
 class CouchbasePersistenceGuiceModule extends AbstractModule {
-
   override def configure(): Unit =
     initServiceLocatorHolder()
 

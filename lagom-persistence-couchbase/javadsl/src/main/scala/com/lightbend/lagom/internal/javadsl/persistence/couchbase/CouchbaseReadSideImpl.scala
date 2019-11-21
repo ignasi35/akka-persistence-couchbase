@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Lightbend Inc. <http://www.lightbend.com>
+ * Copyright (C) 2018-2019 Lightbend Inc. <http://www.lightbend.com>
  */
 
 package com.lightbend.lagom.internal.javadsl.persistence.couchbase
@@ -18,13 +18,12 @@ import javax.inject.{Inject, Singleton}
 import play.api.inject.Injector
 
 @Singleton
-private[lagom] class CouchbaseReadSideImpl @Inject()(
+private[lagom] class CouchbaseReadSideImpl @Inject() (
     system: ActorSystem,
     couchbaseSession: CouchbaseSession,
     offsetStore: CouchbaseOffsetStore,
     injector: Injector
 ) extends CouchbaseReadSide {
-
   private val dispatcher = system.settings.config.getString("lagom.persistence.read-side.use-dispatcher")
   private implicit val ec: MessageDispatcher = system.dispatchers.lookup(dispatcher)
 
@@ -32,7 +31,6 @@ private[lagom] class CouchbaseReadSideImpl @Inject()(
       readSideId: String
   ): CouchbaseReadSide.ReadSideHandlerBuilder[Event] =
     new CouchbaseReadSide.ReadSideHandlerBuilder[Event] {
-
       type Handler[E] = CouchbaseReadSideHandler.Handler[E]
 
       private var globalPrepareCallback: CouchbaseSession => CompletionStage[Done] =
@@ -74,12 +72,14 @@ private[lagom] class CouchbaseReadSideImpl @Inject()(
       }
 
       override def build(): ReadSideProcessor.ReadSideHandler[Event] =
-        new CouchbaseReadSideHandler[Event](couchbaseSession,
-                                            offsetStore,
-                                            handlers,
-                                            globalPrepareCallback,
-                                            prepareCallback,
-                                            readSideId,
-                                            dispatcher)
+        new CouchbaseReadSideHandler[Event](
+          couchbaseSession,
+          offsetStore,
+          handlers,
+          globalPrepareCallback,
+          prepareCallback,
+          readSideId,
+          dispatcher
+        )
     }
 }

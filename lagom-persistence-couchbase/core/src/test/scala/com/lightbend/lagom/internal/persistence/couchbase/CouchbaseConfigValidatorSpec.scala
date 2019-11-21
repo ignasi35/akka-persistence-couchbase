@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Lightbend Inc. <http://www.lightbend.com>
+ * Copyright (C) 2018-2019 Lightbend Inc. <http://www.lightbend.com>
  */
 
 package com.lightbend.lagom.internal.persistence.couchbase
@@ -16,7 +16,6 @@ import scala.concurrent.Await
 class MyException extends RuntimeException("MyException")
 
 class CouchbaseConfigValidatorSpec extends WordSpec with MustMatchers with BeforeAndAfterAll {
-
   val akkaTestLogging = ConfigFactory.parseString("akka.loggers = [akka.testkit.TestEventListener]")
   implicit val system = ActorSystem("test", akkaTestLogging)
   val log = Logging(system, classOf[CouchbaseConfigValidatorSpec])

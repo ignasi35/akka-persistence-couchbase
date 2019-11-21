@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Lightbend Inc. <http://www.lightbend.com>
+ * Copyright (C) 2018-2019 Lightbend Inc. <http://www.lightbend.com>
  */
 
 package akka.persistence.couchbase.scaladsl
@@ -16,7 +16,6 @@ import scala.collection.immutable
 import scala.concurrent.duration._
 
 class Tagger extends WriteEventAdapter {
-
   override def toJournal(event: Any): Any = event match {
     case s: String =>
       val regex = """tag-\w+""".r
@@ -30,7 +29,6 @@ class Tagger extends WriteEventAdapter {
 }
 
 class EventsByTagSpec extends AbstractCouchbaseSpec("EventsByTagSpec") {
-
   // use unique tags for each test to isolate
   var tagCounter = 0
   private def newTag(): String = {
@@ -39,7 +37,6 @@ class EventsByTagSpec extends AbstractCouchbaseSpec("EventsByTagSpec") {
   }
 
   "liveEventsByTag" must {
-
     "find new events" in new Setup {
       val (_, a1) = startPersistentActor(0)
       val (pid2, a2) = startPersistentActor(0)
@@ -89,7 +86,6 @@ class EventsByTagSpec extends AbstractCouchbaseSpec("EventsByTagSpec") {
     }
 
     "find events from offset " in new Setup {
-
       val (pid1, a1) = startPersistentActor(0)
       val (pid2, a2) = startPersistentActor(0)
       val (_, a3) = startPersistentActor(0) // don't use until after query started
@@ -207,7 +203,6 @@ class EventsByTagSpec extends AbstractCouchbaseSpec("EventsByTagSpec") {
     }
 
     "stream many events" in new Setup {
-
       val tag = newTag()
       system.log.debug("tag: {}", tag)
 
@@ -291,7 +286,6 @@ class EventsByTagSpec extends AbstractCouchbaseSpec("EventsByTagSpec") {
     }
 
     "find existing events with an offset into an atomic write" in new Setup {
-
       val tag1 = newTag()
       val tag2 = newTag()
       system.log.debug("tag1: {}, tag2: {}", tag1, tag2)
@@ -390,9 +384,6 @@ class EventsByTagSpec extends AbstractCouchbaseSpec("EventsByTagSpec") {
 
       ref1 ! TestActor.Stop
       ref2 ! TestActor.Stop
-
     }
-
   }
-
 }

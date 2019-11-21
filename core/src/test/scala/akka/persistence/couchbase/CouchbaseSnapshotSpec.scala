@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Lightbend Inc. <http://www.lightbend.com>
+ * Copyright (C) 2018-2019 Lightbend Inc. <http://www.lightbend.com>
  */
 
 package akka.persistence.couchbase
@@ -27,7 +27,6 @@ class CouchbaseSnapshotSpec
     with CouchbaseBucketSetup
     with BeforeAndAfterEach
     with WithLogCapturing {
-
   protected override def afterAll(): Unit = {
     super.afterAll()
     shutdown(system)
@@ -81,5 +80,4 @@ class CouchbaseSnapshotSpec
       }
     }
   }
-
 }

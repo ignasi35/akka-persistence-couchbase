@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Lightbend Inc. <http://www.lightbend.com>
+ * Copyright (C) 2018-2019 Lightbend Inc. <http://www.lightbend.com>
  */
 
 package com.lightbend.lagom.scaladsl.persistence.couchbase
@@ -19,7 +19,6 @@ import scala.concurrent.Future
 import scala.concurrent.duration._
 
 object CouchbaseReadSideSpec {
-
   val defaultConfig: Config = ConfigFactory.parseString("akka.loglevel = info")
 }
 
@@ -27,7 +26,6 @@ class CouchbaseReadSideSpec
     extends CouchbasePersistenceSpec(CouchbaseReadSideSpec.defaultConfig, TestEntitySerializerRegistry)
     with AbstractReadSideSpec
     with CouchbaseBucketSetup {
-
   override protected lazy val persistentEntityRegistry = new CouchbasePersistentEntityRegistry(system)
 
   private lazy val offsetStore = new ScaladslCouchbaseOffsetStore(system, couchbaseSession, ReadSideConfig())
@@ -44,5 +42,4 @@ class CouchbaseReadSideSpec
     persistentEntityRegistry.gracefulShutdown(5.seconds)
     super.afterAll()
   }
-
 }

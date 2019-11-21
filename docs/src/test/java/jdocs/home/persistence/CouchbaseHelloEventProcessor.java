@@ -1,6 +1,10 @@
+/*
+ * Copyright (C) 2018-2019 Lightbend Inc. <http://www.lightbend.com>
+ */
+
 package jdocs.home.persistence;
 
-//#imports
+// #imports
 import akka.Done;
 import akka.stream.alpakka.couchbase.javadsl.CouchbaseSession;
 import com.couchbase.client.java.document.JsonDocument;
@@ -16,13 +20,12 @@ import java.util.concurrent.CompletionStage;
 
 import static akka.Done.done;
 
-
-//#imports
+// #imports
 
 public class CouchbaseHelloEventProcessor {
 
   class Intial {
-    //#initial
+    // #initial
     public class HelloEventProcessor extends ReadSideProcessor<HelloEvent> {
 
       private final CouchbaseReadSide readSide;
@@ -44,7 +47,7 @@ public class CouchbaseHelloEventProcessor {
         return null;
       }
     }
-    //#initial
+    // #initial
   }
 
   public class HelloEventProcessor extends ReadSideProcessor<HelloEvent> {
@@ -56,74 +59,83 @@ public class CouchbaseHelloEventProcessor {
       this.readSide = readSide;
     }
 
-    //#tag
+    // #tag
     @Override
     public PSequence<AggregateEventTag<HelloEvent>> aggregateTags() {
       return HelloEvent.TAG.allTags();
     }
-    //#tag
+    // #tag
 
-    //#create-document
+    // #create-document
     final String DOC_ID = "users-actual-greetings";
 
     private CompletionStage<Done> createDocument(CouchbaseSession session) {
-      return
-          session.get(DOC_ID).thenComposeAsync(doc -> {
-            if (doc.isPresent()) {
-              return CompletableFuture.completedFuture(Done.getInstance());
-            }
-            return session.insert(JsonDocument.create(DOC_ID, JsonObject.empty()))
-                .thenApply(ignore -> Done.getInstance());
-          });
+      return session
+          .get(DOC_ID)
+          .thenComposeAsync(
+              doc -> {
+                if (doc.isPresent()) {
+                  return CompletableFuture.completedFuture(Done.getInstance());
+                }
+                return session
+                    .insert(JsonDocument.create(DOC_ID, JsonObject.empty()))
+                    .thenApply(ignore -> Done.getInstance());
+              });
     }
-    //#create-document
+    // #create-document
 
-    //#prepare-statements
-    private CompletionStage<Done> prepare(CouchbaseSession session, AggregateEventTag<HelloEvent> tag) {
-      //TODO do something when read-side is run for each shard
+    // #prepare-statements
+    private CompletionStage<Done> prepare(
+        CouchbaseSession session, AggregateEventTag<HelloEvent> tag) {
+      // TODO do something when read-side is run for each shard
       return CompletableFuture.completedFuture(Done.getInstance());
     }
-    //#prepare-statements
+    // #prepare-statements
 
     @Override
     public ReadSideHandler<HelloEvent> buildHandler() {
-      //#create-builder
+      // #create-builder
       CouchbaseReadSide.ReadSideHandlerBuilder<HelloEvent> builder =
           readSide.builder("all-greetings");
-      //#create-builder
+      // #create-builder
 
-      //#register-global-prepare
+      // #register-global-prepare
       builder.setGlobalPrepare(this::createDocument);
-      //#register-global-prepare
+      // #register-global-prepare
 
-      //#set-event-handler
-      builder.setEventHandler(HelloEvent.GreetingMessageChanged.class, this::processGreetingMessageChanged);
-      //#set-event-handler
+      // #set-event-handler
+      builder.setEventHandler(
+          HelloEvent.GreetingMessageChanged.class, this::processGreetingMessageChanged);
+      // #set-event-handler
 
-      //#register-prepare
+      // #register-prepare
       builder.setPrepare(this::prepare);
-      //#register-prepare
+      // #register-prepare
 
-      //#build
+      // #build
       return builder.build();
-      //#build
+      // #build
     }
 
-    //#greeting-message-changed
-    private CompletionStage<Done> processGreetingMessageChanged(CouchbaseSession session, HelloEvent.GreetingMessageChanged evt) {
+    // #greeting-message-changed
+    private CompletionStage<Done> processGreetingMessageChanged(
+        CouchbaseSession session, HelloEvent.GreetingMessageChanged evt) {
       // FIXME support granular upsert in session API to get an atomic upsert here #136
-      return session.get(DOC_ID).thenCompose((maybeJson) -> {
-        final JsonObject json;
-        if (maybeJson.isPresent()) {
-          json = maybeJson.get().content();
-        } else {
-          json = JsonObject.create();
-        }
-        return session.upsert(JsonDocument.create(DOC_ID, json.put(evt.name, evt.message)));
-      }).thenApply(doc -> done());
+      return session
+          .get(DOC_ID)
+          .thenCompose(
+              (maybeJson) -> {
+                final JsonObject json;
+                if (maybeJson.isPresent()) {
+                  json = maybeJson.get().content();
+                } else {
+                  json = JsonObject.create();
+                }
+                return session.upsert(JsonDocument.create(DOC_ID, json.put(evt.name, evt.message)));
+              })
+          .thenApply(doc -> done());
     }
-    //#greeting-message-changed
+    // #greeting-message-changed
 
   }
-
 }

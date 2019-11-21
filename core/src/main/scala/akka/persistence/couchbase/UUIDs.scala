@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Lightbend Inc. <http://www.lightbend.com>
+ * Copyright (C) 2018-2019 Lightbend Inc. <http://www.lightbend.com>
  */
 
 package akka.persistence.couchbase
@@ -7,7 +7,6 @@ import akka.persistence.couchbase.internal.{TimeBasedUUIDs, UUIDTimestamp}
 import akka.persistence.query.{NoOffset, Offset, TimeBasedUUID}
 
 object UUIDs {
-
   /**
    * Create a time based UUID that can be used as offset in `eventsByTag`
    * queries. The `timestamp` is a unix timestamp (as returned by
@@ -30,5 +29,4 @@ object UUIDs {
    */
   def timestampFrom(offset: TimeBasedUUID): Long =
     new UUIDTimestamp(offset.value.timestamp()).toUnixTimestamp
-
 }

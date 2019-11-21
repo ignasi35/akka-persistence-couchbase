@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Lightbend Inc. <http://www.lightbend.com>
+ * Copyright (C) 2018-2019 Lightbend Inc. <http://www.lightbend.com>
  */
 
 package com.lightbend.lagom.javadsl.persistence.couchbase
@@ -20,7 +20,6 @@ import play.api.inject.guice.GuiceInjectorBuilder
 import com.lightbend.lagom.javadsl.persistence.TestEntityReadSide
 
 object CouchbaseReadSideSpec {
-
   val defaultConfig: Config = ConfigFactory.parseString("akka.loglevel = INFO")
 }
 
@@ -28,7 +27,6 @@ class CouchbaseReadSideSpec
     extends CouchbasePersistenceSpec(CouchbaseReadSideSpec.defaultConfig)
     with AbstractReadSideSpec
     with CouchbaseBucketSetup {
-
   private lazy val injector = new GuiceInjectorBuilder().build()
 
   lazy val testSession = couchbaseSession.asJava

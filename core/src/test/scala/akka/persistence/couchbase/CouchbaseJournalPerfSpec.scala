@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Lightbend Inc. <http://www.lightbend.com>
+ * Copyright (C) 2018-2019 Lightbend Inc. <http://www.lightbend.com>
  */
 
 package akka.persistence.couchbase
@@ -22,7 +22,6 @@ class CouchbaseJournalPerfSpec
         """).withFallback(ConfigFactory.load()))
     with CouchbaseBucketSetup
     with WithLogCapturing {
-
   override def awaitDurationMillis: Long = 20.seconds.toMillis
 
   // We want to test with persisting guaranteed, which makes

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Lightbend Inc. <http://www.lightbend.com>
+ * Copyright (C) 2018-2019 Lightbend Inc. <http://www.lightbend.com>
  */
 
 package com.lightbend.lagom.javadsl.persistence;
@@ -47,12 +47,9 @@ public class PersistentEntityRefTest {
 
   @BeforeClass
   public static void setup() {
-    Config config = TestConfig.clusterConfig()
-        .withFallback(TestConfig.persistenceConfig());
+    Config config = TestConfig.clusterConfig().withFallback(TestConfig.persistenceConfig());
 
-    application = new GuiceApplicationBuilder()
-        .configure(config)
-        .build();
+    application = new GuiceApplicationBuilder().configure(config).build();
     injector = application.injector();
 
     ActorSystem system = injector.instanceOf(ActorSystem.class);
@@ -62,8 +59,7 @@ public class PersistentEntityRefTest {
     awaitPersistenceInit(system);
 
     // TODO reuse parts of akka.persistence.couchbase.CouchbaseBucketSetup
-    couchbaseCluster = CouchbaseCluster.create()
-        .authenticate("admin", "admin1");
+    couchbaseCluster = CouchbaseCluster.create().authenticate("admin", "admin1");
     bucket = couchbaseCluster.openBucket("akka");
     bucket.bucketManager().createN1qlPrimaryIndex(true, false);
     bucket.query(N1qlQuery.simple("delete from akka"));
@@ -124,8 +120,10 @@ public class PersistentEntityRefTest {
 
   @Test(expected = AskTimeoutException.class)
   public void testAskTimeout() throws Throwable {
-    PersistentEntityRef<Cmd> ref = registry().refFor(TestEntity.class, "10").withAskTimeout(
-        FiniteDuration.create(1, MILLISECONDS));
+    PersistentEntityRef<Cmd> ref =
+        registry()
+            .refFor(TestEntity.class, "10")
+            .withAskTimeout(FiniteDuration.create(1, MILLISECONDS));
 
     List<CompletionStage<Evt>> replies = new ArrayList<>();
     for (int i = 0; i < 100; i++) {
@@ -181,5 +179,4 @@ public class PersistentEntityRefTest {
   public void testUnregistered() throws Throwable {
     registry().refFor(AnotherEntity.class, "1");
   }
-
 }

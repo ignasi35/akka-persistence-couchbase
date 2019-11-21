@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Lightbend Inc. <http://www.lightbend.com>
+ * Copyright (C) 2018-2019 Lightbend Inc. <http://www.lightbend.com>
  */
 
 package akka.persistence.couchbase.scaladsl
@@ -25,7 +25,6 @@ abstract class AbstractCouchbaseSpec(testName: String, config: Config)
     with ScalaFutures
     with CouchbaseBucketSetup
     with WithLogCapturing {
-
   def this(testName: String) =
     this(
       testName,
@@ -84,5 +83,4 @@ abstract class AbstractCouchbaseSpec(testName: String, config: Config)
     super.afterAll()
     shutdown(system)
   }
-
 }
