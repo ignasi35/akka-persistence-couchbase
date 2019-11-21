@@ -54,7 +54,7 @@ def common: Seq[Setting[_]] = Seq(
   ),
   headerLicense := Some(
     HeaderLicense.Custom(
-      """Copyright (C) 2018 Lightbend Inc. <http://www.lightbend.com>"""
+      """Copyright (C) 2018-2019 Lightbend Inc. <http://www.lightbend.com>"""
     )
   ),
   logBuffered in Test := System.getProperty("akka.logBufferedTests", "false").toBoolean,
@@ -79,7 +79,9 @@ def multiJvmTestSettings: Seq[Setting[_]] =
   SbtMultiJvm.multiJvmSettings ++ Seq(
     // `database.port` required for multi-dc tests that extend AbstractClusteredPersistentEntityConfig
     MultiJvmKeys.jvmOptions in MultiJvm := Seq("-Ddatabase.port=0")
-  )
+  ) ++
+    inConfig(MultiJvm)(ScalafmtPlugin.scalafmtConfigSettings) ++
+    headerSettings(MultiJvm)
 
 lazy val root = (project in file("."))
   .settings(common)
@@ -93,7 +95,7 @@ lazy val root = (project in file("."))
   .aggregate((Seq(core, docs) ++ lagomModules).map(Project.projectToRef): _*)
 
 lazy val core = (project in file("core"))
-  .enablePlugins(AutomateHeaderPlugin)
+  .enablePlugins(HeaderPlugin)
   .settings(AutomaticModuleName.settings("akka.persistence.couchbase"))
   .settings(common)
   .settings(
@@ -136,7 +138,7 @@ lazy val `lagom-persistence-couchbase-core` = (project in file("lagom-persistenc
   .dependsOn(core % "compile;test->test")
   .settings(common)
   .settings(AutomaticModuleName.settings("lagom.persistence.couchbase.core"))
-  .enablePlugins(AutomateHeaderPlugin)
+  .enablePlugins(HeaderPlugin)
   .settings(
     name := "lagom-persistence-couchbase-core",
     libraryDependencies := Dependencies.`lagom-persistence-couchbase-core`,
@@ -151,7 +153,7 @@ lazy val `lagom-persistence-couchbase-javadsl` = (project in file("lagom-persist
     `lagom-persistence-couchbase-core` % "compile;test->test",
     `copy-of-lagom-persistence-test` % "test->test"
   )
-  .enablePlugins(AutomateHeaderPlugin)
+  .enablePlugins(HeaderPlugin)
   .settings(
     name := "lagom-javadsl-persistence-couchbase",
     libraryDependencies := Dependencies.`lagom-persistence-couchbase-javadsl`,
@@ -169,7 +171,7 @@ lazy val `lagom-persistence-couchbase-scaladsl` = (project in file("lagom-persis
   )
   .settings(common)
   .settings(AutomaticModuleName.settings("lagom.persistence.couchbase.scaladsl"))
-  .enablePlugins(AutomateHeaderPlugin)
+  .enablePlugins(HeaderPlugin)
   .settings(
     name := "lagom-scaladsl-persistence-couchbase",
     libraryDependencies := Dependencies.`lagom-persistence-couchbase-scaladsl`,
