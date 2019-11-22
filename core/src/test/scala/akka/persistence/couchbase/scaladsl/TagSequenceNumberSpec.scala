@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Lightbend Inc. <http://www.lightbend.com>
+ * Copyright (C) 2018-2019 Lightbend Inc. <http://www.lightbend.com>
  */
 
 package akka.persistence.couchbase.scaladsl
@@ -23,7 +23,6 @@ class TagSequenceNumberSpec
     with AsyncCouchbaseSession
     with Queries
     with TagSequenceNumbering {
-
   // for using TagSequenceNumbering to verify tag seq nrs
   def log = system.log
   protected def queryConsistency = N1qlParams.build().consistency(ScanConsistency.STATEMENT_PLUS)
@@ -32,7 +31,6 @@ class TagSequenceNumberSpec
   implicit def executionContext = system.dispatcher
 
   "events by tag sequence numbering" must {
-
     "be monotonic and without holes when actor is stopped and restarted" in new Setup {
       val tag1 = "tag-1"
       val tag2 = "tag-2"
@@ -69,7 +67,6 @@ class TagSequenceNumberSpec
           currentTagSeqNrFromDb(pid, tag1).futureValue should ===(Some(3 * restartN))
         }
       }
-
     }
 
     "cause query to fail when there are gaps" in {
@@ -130,7 +127,5 @@ class TagSequenceNumberSpec
       val error = streamProbe.expectError() // should fail because of the gap
       error shouldBe an[OutOfOrderEventException]
     }
-
   }
-
 }

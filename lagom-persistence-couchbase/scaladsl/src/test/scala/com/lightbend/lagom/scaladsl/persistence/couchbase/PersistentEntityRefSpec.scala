@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Lightbend Inc. <http://www.lightbend.com>
+ * Copyright (C) 2018-2019 Lightbend Inc. <http://www.lightbend.com>
  */
 
 package com.lightbend.lagom.scaladsl.persistence.couchbase
@@ -44,7 +44,6 @@ class PersistentEntityRefSpec
     with TypeCheckedTripleEquals
     with CouchbaseBucketSetup // CouchbaseBucketSetup's only needed here for cleaning up the bucket before the test
     {
-
   override implicit val patienceConfig = PatienceConfig(5.seconds, 150.millis)
 
   private val config: Config = TestConfig
@@ -97,7 +96,6 @@ class PersistentEntityRefSpec
   }
 
   "The Couchbase persistence backend" should {
-
     "send commands to the registry" in {
       val ref1 = registry.refFor[TestEntity]("1")
       ref1
@@ -146,6 +144,5 @@ class PersistentEntityRefSpec
         registry.refFor[AnotherEntity]("whatever")
       }
     }
-
   }
 }

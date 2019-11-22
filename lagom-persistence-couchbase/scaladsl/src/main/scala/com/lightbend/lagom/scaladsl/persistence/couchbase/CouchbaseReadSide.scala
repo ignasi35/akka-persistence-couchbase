@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Lightbend Inc. <http://www.lightbend.com>
+ * Copyright (C) 2018-2019 Lightbend Inc. <http://www.lightbend.com>
  */
 
 package com.lightbend.lagom.scaladsl.persistence.couchbase
@@ -18,12 +18,10 @@ import akka.stream.alpakka.couchbase.scaladsl.CouchbaseSession
  * This should be used to build and register a read side processor.
  */
 object CouchbaseReadSide {
-
   /**
    * Builder for the handler.
    */
   trait ReadSideHandlerBuilder[Event <: AggregateEvent[Event]] {
-
     /**
      * Set a global prepare callback.
      *
@@ -62,11 +60,9 @@ object CouchbaseReadSide {
      */
     def build(): ReadSideHandler[Event]
   }
-
 }
 
 trait CouchbaseReadSide {
-
   /**
    * Create a builder for a Cassandra read side event handler.
    *

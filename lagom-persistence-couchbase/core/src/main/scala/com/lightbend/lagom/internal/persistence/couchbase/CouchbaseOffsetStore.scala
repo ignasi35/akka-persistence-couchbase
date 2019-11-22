@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Lightbend Inc. <http://www.lightbend.com>
+ * Copyright (C) 2018-2019 Lightbend Inc. <http://www.lightbend.com>
  */
 
 package com.lightbend.lagom.internal.persistence.couchbase
@@ -28,18 +28,17 @@ private[lagom] object CouchbaseOffsetStore {
 
   val SequenceOffsetField = "sequenceOffset"
   val UuidOffsetField = "uuidOffset"
-
 }
 
 /**
  * INTERNAL API
  */
 @InternalApi
-private[lagom] abstract class CouchbaseOffsetStore(system: ActorSystem,
-                                                   config: ReadSideConfig,
-                                                   couchbase: CouchbaseSession)
-    extends OffsetStore {
-
+private[lagom] abstract class CouchbaseOffsetStore(
+    system: ActorSystem,
+    config: ReadSideConfig,
+    couchbase: CouchbaseSession
+) extends OffsetStore {
   import CouchbaseOffsetStore._
   import system.dispatcher
 
@@ -63,20 +62,19 @@ private[lagom] abstract class CouchbaseOffsetStore(system: ActorSystem,
         new CouchbaseOffsetDao(couchbase, eventProcessorId, tag, offset, system.dispatcher)
     }
   }
-
 }
 
 /**
  * INTERNAL API
  */
 @InternalApi
-private[lagom] final class CouchbaseOffsetDao(couchbase: CouchbaseSession,
-                                              eventProcessorId: String,
-                                              tag: String,
-                                              override val loadedOffset: Offset,
-                                              ec: ExecutionContext)
-    extends OffsetDao {
-
+private[lagom] final class CouchbaseOffsetDao(
+    couchbase: CouchbaseSession,
+    eventProcessorId: String,
+    tag: String,
+    override val loadedOffset: Offset,
+    ec: ExecutionContext
+) extends OffsetDao {
   override def saveOffset(offset: Offset): Future[Done] = bindSaveOffset(offset).execute(couchbase, ec)
 
   // FIXME write guarantees
@@ -107,5 +105,4 @@ private[lagom] final class CouchbaseOffsetDao(couchbase: CouchbaseSession,
           }
         }
     }
-
 }

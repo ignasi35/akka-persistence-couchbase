@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Lightbend Inc. <http://www.lightbend.com>
+ * Copyright (C) 2018-2019 Lightbend Inc. <http://www.lightbend.com>
  */
 
 package akka.persistence.couchbase
@@ -33,13 +33,11 @@ import scala.util.{Failure, Success, Try}
  */
 @InternalApi
 private[akka] object CouchbaseJournal {
-
   final case class PersistentActorTerminated(persistenceId: String)
 
   private final case class WriteFinished(persistenceId: String, f: Future[Done])
 
   private val ExtraSuccessFulUnit: Try[Unit] = Success(())
-
 }
 
 /**
@@ -51,7 +49,6 @@ class CouchbaseJournal(config: Config, configPath: String)
     with AsyncCouchbaseSession
     with Queries
     with TagSequenceNumbering {
-
   import CouchbaseJournal._
   import akka.persistence.couchbase.internal.CouchbaseSchema.Fields
 
@@ -164,8 +161,12 @@ class CouchbaseJournal(config: Config, configPath: String)
             for {
               serialized <- serializedF
               tagsAndSeqNrs <- tagsAndSeqNrsF
-            } yield
-              new TaggedMessageForWrite(persistentRepr.sequenceNr, serialized, uuidGenerator.nextUuid(), tagsAndSeqNrs)
+            } yield new TaggedMessageForWrite(
+              persistentRepr.sequenceNr,
+              serialized,
+              uuidGenerator.nextUuid(),
+              tagsAndSeqNrs
+            )
 
           case other =>
             SerializedMessage
@@ -292,7 +293,7 @@ class CouchbaseJournal(config: Config, configPath: String)
                 )
             }
           }
-      }
+        }
     )
   }
 }

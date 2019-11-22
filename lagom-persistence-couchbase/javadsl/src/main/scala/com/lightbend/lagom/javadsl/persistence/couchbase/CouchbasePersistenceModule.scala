@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Lightbend Inc. <http://www.lightbend.com>
+ * Copyright (C) 2018-2019 Lightbend Inc. <http://www.lightbend.com>
  */
 
 package com.lightbend.lagom.javadsl.persistence.couchbase
@@ -39,7 +39,6 @@ import scala.util.Try
  * Guice module for the Persistence API.
  */
 class CouchbasePersistenceModule extends Module {
-
   override def bindings(environment: Environment, configuration: Configuration): Seq[Binding[_]] = Seq(
     bind[CouchbasePersistenceModule.InitServiceLocatorHolder].toSelf.eagerly(),
     bind[PersistentEntityRegistry].to[CouchbasePersistentEntityRegistry],
@@ -50,11 +49,9 @@ class CouchbasePersistenceModule extends Module {
     bind[CouchbaseOffsetStore].to(bind[JavadslCouchbaseOffsetStore]),
     bind[OffsetStore].to(bind[CouchbaseOffsetStore])
   )
-
 }
 
-private[lagom] class CouchbaseProvider @Inject()(system: ActorSystem, cfg: Config) extends Provider[CouchbaseSession] {
-
+private[lagom] class CouchbaseProvider @Inject() (system: ActorSystem, cfg: Config) extends Provider[CouchbaseSession] {
   private val log = Logging(system, classOf[CouchbaseProvider])
 
   CouchbaseConfigValidator.validateBucket("lagom.persistence.read-side.couchbase", cfg, log)
@@ -79,9 +76,7 @@ private[lagom] class CouchbaseProvider @Inject()(system: ActorSystem, cfg: Confi
 }
 
 private[lagom] object CouchbasePersistenceModule {
-
-  class InitServiceLocatorHolder @Inject()(system: ActorSystem, injector: Injector) {
-
+  class InitServiceLocatorHolder @Inject() (system: ActorSystem, injector: Injector) {
     def init(): Unit =
       Try(injector.instanceOf[ServiceLocator]).foreach { locator =>
         ServiceLocatorHolder(system).setServiceLocator(new ServiceLocatorAdapter {
@@ -95,5 +90,4 @@ private[lagom] object CouchbasePersistenceModule {
         })
       }
   }
-
 }

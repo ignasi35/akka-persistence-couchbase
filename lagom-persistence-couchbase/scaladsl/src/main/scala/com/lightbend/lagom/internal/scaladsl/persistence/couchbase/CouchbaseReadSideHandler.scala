@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Lightbend Inc. <http://www.lightbend.com>
+ * Copyright (C) 2018-2019 Lightbend Inc. <http://www.lightbend.com>
  */
 
 package com.lightbend.lagom.internal.scaladsl.persistence.couchbase
@@ -20,7 +20,6 @@ import scala.concurrent.{ExecutionContext, Future}
  * Internal API
  */
 private[couchbase] object CouchbaseReadSideHandler {
-
   type Handler[Event] = (CouchbaseSession, EventStreamElement[_ <: Event]) => Future[Done]
 
   def emptyHandler[Event]: Handler[Event] = (_, _) => Future.successful(Done)
@@ -39,7 +38,6 @@ private[couchbase] final class CouchbaseReadSideHandler[Event <: AggregateEvent[
     dispatcher: String
 )(implicit ec: ExecutionContext)
     extends ReadSideHandler[Event] {
-
   import CouchbaseReadSideHandler.Handler
 
   private val log = LoggerFactory.getLogger(this.getClass)
@@ -80,7 +78,6 @@ private[couchbase] final class CouchbaseReadSideHandler[Event <: AggregateEvent[
           )
 
         invoke(handler, elem)
-
       }
       .withAttributes(ActorAttributes.dispatcher(dispatcher))
 }

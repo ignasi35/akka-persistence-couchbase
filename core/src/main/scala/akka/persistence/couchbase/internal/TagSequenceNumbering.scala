@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Lightbend Inc. <http://www.lightbend.com>
+ * Copyright (C) 2018-2019 Lightbend Inc. <http://www.lightbend.com>
  */
 
 package akka.persistence.couchbase.internal
@@ -35,7 +35,6 @@ import scala.concurrent.{ExecutionContext, Future}
   def nextTagSeqNrFor(pid: PersistenceId, tag: Tag): Future[Long] = {
     val key = (pid, tag)
     Option(taggingPerPidSequenceNumbers.get(key)) match {
-
       case Some(present) =>
         Future.successful(present)
         val newValue = present + 1
@@ -87,5 +86,4 @@ import scala.concurrent.{ExecutionContext, Future}
         case None => None
       }
     }
-
 }

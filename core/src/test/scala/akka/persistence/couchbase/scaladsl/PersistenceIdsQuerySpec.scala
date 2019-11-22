@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Lightbend Inc. <http://www.lightbend.com>
+ * Copyright (C) 2018-2019 Lightbend Inc. <http://www.lightbend.com>
  */
 
 package akka.persistence.couchbase.scaladsl
@@ -12,10 +12,8 @@ import akka.testkit.TestProbe
 import scala.concurrent.duration._
 
 class PersistenceIdsQuerySpec extends AbstractCouchbaseSpec("PersistenceIdsQuerySpec") {
-
   "currentPersistenceIds" must {
     "work" in {
-
       val senderProbe = TestProbe()
       implicit val sender = senderProbe.ref
       val pa1 = system.actorOf(TestActor.props("p1"))
@@ -35,7 +33,6 @@ class PersistenceIdsQuerySpec extends AbstractCouchbaseSpec("PersistenceIdsQuery
         },
         readOurOwnWritesTimeout
       )
-
     }
   }
 
@@ -65,8 +62,6 @@ class PersistenceIdsQuerySpec extends AbstractCouchbaseSpec("PersistenceIdsQuery
       queryProbe.expectNext("p4")
       // also not after p4 (it could come out of order)
       queryProbe.expectNoMessage(noMsgTimeout)
-
     }
   }
-
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Lightbend Inc. <http://www.lightbend.com>
+ * Copyright (C) 2018-2019 Lightbend Inc. <http://www.lightbend.com>
  */
 
 package akka.persistence.couchbase.internal
@@ -19,7 +19,6 @@ import scala.util.Success
  */
 @InternalApi
 private[akka] trait AsyncCouchbaseSession {
-
   /**
    * Note: Implement with a val so that it doesn't get recreated on each access
    */
@@ -47,5 +46,4 @@ private[akka] trait AsyncCouchbaseSession {
       case Some(Success(session)) => session.close()
       case _ => asyncSession.flatMap(_.close())
     }
-
 }

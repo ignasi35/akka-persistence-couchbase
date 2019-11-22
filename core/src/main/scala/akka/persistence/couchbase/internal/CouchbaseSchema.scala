@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Lightbend Inc. <http://www.lightbend.com>
+ * Copyright (C) 2018-2019 Lightbend Inc. <http://www.lightbend.com>
  */
 
 package akka.persistence.couchbase.internal
@@ -30,17 +30,17 @@ import scala.util.control.NonFatal
  */
 @InternalApi
 private[akka] final object CouchbaseSchema {
-
   sealed class MessageForWrite(val sequenceNr: Long, val msg: SerializedMessage)
 
   /**
    * @param tags each tag and the corresponding sequence number for it
    */
-  final class TaggedMessageForWrite(sequenceNr: Long,
-                                    msg: SerializedMessage,
-                                    val ordering: UUID,
-                                    val tags: im.Seq[(String, Long)])
-      extends MessageForWrite(sequenceNr, msg)
+  final class TaggedMessageForWrite(
+      sequenceNr: Long,
+      msg: SerializedMessage,
+      val ordering: UUID,
+      val tags: im.Seq[(String, Long)]
+  ) extends MessageForWrite(sequenceNr, msg)
 
   /**
    * @param tags each tag and the corresponding sequence number for it
@@ -124,13 +124,15 @@ private[akka] final object CouchbaseSchema {
     """
 
     protected def replayQuery(persistenceId: String, from: Long, to: Long, params: N1qlParams): N1qlQuery =
-      N1qlQuery.parameterized(replayStatement,
-                              JsonObject
-                                .create()
-                                .put("pid", persistenceId)
-                                .put("from", from)
-                                .put("to", to),
-                              params)
+      N1qlQuery.parameterized(
+        replayStatement,
+        JsonObject
+          .create()
+          .put("pid", persistenceId)
+          .put("from", from)
+          .put("to", to),
+        params
+      )
 
     /*
      * The rationale behind this query is that indexed queries on
@@ -191,17 +193,21 @@ private[akka] final object CouchbaseSchema {
          LIMIT $$limit
     """.stripMargin
 
-    protected def eventsByPersistenceIdQuery(persistenceId: String,
-                                             fromSequenceNr: Long,
-                                             toSequenceNr: Long,
-                                             pageSize: Int): N1qlQuery =
-      N1qlQuery.parameterized(eventsByPersistenceId,
-                              JsonObject
-                                .create()
-                                .put("pid", persistenceId)
-                                .put("from", fromSequenceNr)
-                                .put("to", toSequenceNr)
-                                .put("limit", pageSize))
+    protected def eventsByPersistenceIdQuery(
+        persistenceId: String,
+        fromSequenceNr: Long,
+        toSequenceNr: Long,
+        pageSize: Int
+    ): N1qlQuery =
+      N1qlQuery.parameterized(
+        eventsByPersistenceId,
+        JsonObject
+          .create()
+          .put("pid", persistenceId)
+          .put("from", fromSequenceNr)
+          .put("to", toSequenceNr)
+          .put("limit", pageSize)
+      )
 
     // IS NOT NULL is needed to hit the index
     private lazy val persistenceIds =
@@ -249,12 +255,14 @@ private[akka] final object CouchbaseSchema {
       """
 
     def highestTagSequenceNumberQuery(persistenceId: String, tag: String, params: N1qlParams): N1qlQuery =
-      N1qlQuery.parameterized(highestTagSeqNr,
-                              JsonObject
-                                .create()
-                                .put("pid", persistenceId)
-                                .put("tag", tag),
-                              params)
+      N1qlQuery.parameterized(
+        highestTagSeqNr,
+        JsonObject
+          .create()
+          .put("pid", persistenceId)
+          .put("tag", tag),
+        params
+      )
 
     def mapHighestSequenceNr(option: Option[JsonObject]): Long = option match {
       case Some(jsonObj) =>
@@ -334,10 +342,12 @@ private[akka] final object CouchbaseSchema {
     }
   }
 
-  def atomicWriteAsJsonDoc(pid: String,
-                           writerUuid: Any,
-                           messages: im.Seq[MessageForWrite],
-                           lowestSequenceNr: Long): JsonDocument = {
+  def atomicWriteAsJsonDoc(
+      pid: String,
+      writerUuid: Any,
+      messages: im.Seq[MessageForWrite],
+      lowestSequenceNr: Long
+  ): JsonDocument = {
     val insert: JsonObject = JsonObject
       .create()
       .put(Fields.Type, CouchbaseSchema.JournalEntryType)
@@ -359,10 +369,12 @@ private[akka] final object CouchbaseSchema {
     SerializedMessage
       .fromJsonObject(serialization, json)
       .map { payload =>
-        PersistentRepr(payload = payload,
-                       sequenceNr = sequenceNr,
-                       persistenceId = persistenceId,
-                       writerUuid = writerUuid)
+        PersistentRepr(
+          payload = payload,
+          sequenceNr = sequenceNr,
+          persistenceId = persistenceId,
+          writerUuid = writerUuid
+        )
       }(ExecutionContexts.sameThreadExecutionContext)
   }
 
@@ -383,37 +395,40 @@ private[akka] final object CouchbaseSchema {
       .toMap
     SerializedMessage.fromJsonObject(serialization, value).map { payload =>
       TaggedPersistentRepr(
-        PersistentRepr(payload = payload,
-                       sequenceNr = sequenceNr,
-                       persistenceId = persistenceId,
-                       writerUuid = writerUuid),
+        PersistentRepr(
+          payload = payload,
+          sequenceNr = sequenceNr,
+          persistenceId = persistenceId,
+          writerUuid = writerUuid
+        ),
         tagSequenceNumbers,
         TimeBasedUUIDSerialization.fromSortableString(value.getString(Fields.Ordering))
       )
     }
   }
-
 }
 
 /**
  * INTERNAL API
  */
 @InternalApi
-private[akka] final case class SerializedMessage(identifier: Int,
-                                                 manifest: String,
-                                                 payload: Array[Byte],
-                                                 nativePayload: OptionVal[JsonObject])
+private[akka] final case class SerializedMessage(
+    identifier: Int,
+    manifest: String,
+    payload: Array[Byte],
+    nativePayload: OptionVal[JsonObject]
+)
 
 /**
  * INTERNAL API
  */
 @InternalApi
 private[akka] object SerializedMessage {
-
   import CouchbaseSchema.Fields
 
-  def serialize(serialization: Serialization,
-                event: AnyRef)(implicit system: ActorSystem): Future[SerializedMessage] = {
+  def serialize(serialization: Serialization, event: AnyRef)(
+      implicit system: ActorSystem
+  ): Future[SerializedMessage] = {
     val serializer = serialization.findSerializerFor(event)
     val serManifest = Serializers.manifestFor(serializer, event)
 
@@ -439,8 +454,9 @@ private[akka] object SerializedMessage {
     }
   }
 
-  def fromJsonObject(serialization: Serialization,
-                     jsonObject: JsonObject)(implicit system: ActorSystem): Future[Any] = {
+  def fromJsonObject(serialization: Serialization, jsonObject: JsonObject)(
+      implicit system: ActorSystem
+  ): Future[Any] = {
     val serId = jsonObject.getInt(Fields.SerializerId)
     val manifest = jsonObject.getString(Fields.SerializerManifest)
 
@@ -463,5 +479,4 @@ private[akka] object SerializedMessage {
         Future.fromTry(serialization.deserialize(decodeBytes, serId, manifest))
     }
   }
-
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Lightbend Inc. <http://www.lightbend.com>
+ * Copyright (C) 2018-2019 Lightbend Inc. <http://www.lightbend.com>
  */
 
 package akka.persistence.couchbase.internal
@@ -15,9 +15,8 @@ import akka.annotation.InternalApi
  * INTERNAL API
  */
 @InternalApi private[akka] object TimeBasedUUIDs {
-
   val MinLSB = 0x0000000000000000L
-  val MaxLSB = 0x7f7f7f7f7f7f7f7fL
+  val MaxLSB = 0x7F7F7F7F7F7F7F7FL
 
   val MinUUID = create(UUIDTimestamp.MinVal, MinLSB)
   val MaxUUID = create(UUIDTimestamp.MaxVal, MaxLSB)
@@ -32,16 +31,15 @@ import akka.annotation.InternalApi
 
   def msbFromTimestamp(timestamp: UUIDTimestamp): Long = {
     var msb = 0L
-    msb |= (0x00000000ffffffffL & timestamp.nanoTimestamp) << 32
-    msb |= (0x0000ffff00000000L & timestamp.nanoTimestamp) >>> 16
-    msb |= (0x0fff000000000000L & timestamp.nanoTimestamp) >>> 48
+    msb |= (0x00000000FFFFFFFFL & timestamp.nanoTimestamp) << 32
+    msb |= (0x0000FFFF00000000L & timestamp.nanoTimestamp) >>> 16
+    msb |= (0x0FFF000000000000L & timestamp.nanoTimestamp) >>> 48
     msb |= 0x0000000000001000L // sets the version to 1.
     msb
   }
 
   def create(timestamp: UUIDTimestamp, lsb: Long): UUID =
     new UUID(msbFromTimestamp(timestamp), lsb)
-
 }
 
 /**
@@ -50,7 +48,6 @@ import akka.annotation.InternalApi
  * Comparator that sorts the same as the string format in TimeBasedUUIDSerialization
  */
 @InternalApi private[akka] final class TimeBasedUUIDComparator extends Comparator[UUID] {
-
   import java.lang.Long.compareUnsigned
 
   def compare(u1: UUID, u2: UUID): Int = {
@@ -63,7 +60,6 @@ import akka.annotation.InternalApi
     else
       // or if that won't work, by other bits lexically
       compareUnsigned(u1.getLeastSignificantBits, u2.getLeastSignificantBits)
-
   }
 }
 
@@ -78,7 +74,6 @@ import akka.annotation.InternalApi
  * INTERNAL API
  */
 @InternalApi private[akka] object TimeBasedUUIDSerialization {
-
   // very close to ISO 8660 since that is string-sortable, but including nanos
   private val SortableTimeFormatter = new DateTimeFormatterBuilder()
     .appendValue(ChronoField.YEAR, 4, 10, SignStyle.EXCEEDS_PAD)

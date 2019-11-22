@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Lightbend Inc. <http://www.lightbend.com>
+ * Copyright (C) 2018-2019 Lightbend Inc. <http://www.lightbend.com>
  */
 
 package akka.persistence.couchbase.internal
@@ -13,7 +13,6 @@ import scala.concurrent.{ExecutionContext, Future}
  */
 @InternalApi
 private[akka] object FutureUtils {
-
   /**
    * Like Future.traverse but invokes `toFuture` on one A at a time, and does not execute the next one until
    * the returned `Future[B]` completes. Simplification of utilities in:
@@ -33,5 +32,4 @@ private[akka] object FutureUtils {
   )(zero: B)(toNextFuture: (B, A) => Future[B])(implicit ec: ExecutionContext): Future[B] =
     if (as.isEmpty) Future.successful(zero)
     else toNextFuture(zero, as.head).flatMap(b => foldLeftSequential(as.tail)(b)(toNextFuture))
-
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Lightbend Inc. <http://www.lightbend.com>
+ * Copyright (C) 2018-2019 Lightbend Inc. <http://www.lightbend.com>
  */
 
 package akka.persistence.couchbase
@@ -15,11 +15,9 @@ import scala.util.Try
 import scala.concurrent.duration._
 
 object CouchbaseClusterConnection {
-
   def connect(): CouchbaseClusterConnection = connect("admin", "admin1", "akka")
 
   def connect(username: String, password: String, bucketName: String): CouchbaseClusterConnection = {
-
     val cluster = CouchbaseCluster.create()
     cluster.authenticate(username, password) // needs to be admin
 
@@ -27,11 +25,9 @@ object CouchbaseClusterConnection {
 
     new CouchbaseClusterConnection(cluster, bucket)
   }
-
 }
 
 final class CouchbaseClusterConnection(val cluster: Cluster, bucket: Bucket) {
-
   val couchbaseSession: CouchbaseSession = CouchbaseSession(bucket)
 
   def cleanUp(): CouchbaseClusterConnection = {

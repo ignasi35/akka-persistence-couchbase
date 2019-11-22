@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Lightbend Inc. <http://www.lightbend.com>
+ * Copyright (C) 2018-2019 Lightbend Inc. <http://www.lightbend.com>
  */
 
 package com.lightbend.lagom.javadsl.persistence;
@@ -29,9 +29,9 @@ public class TestEntityReadSide {
   }
 
   private static CompletionStage<Long> getCount(CouchbaseSession session, String entityId) {
-    return session.get("count-" + entityId).thenApply(v ->
-        v.isPresent() ? v.get().content().getLong("count") : 0
-    );
+    return session
+        .get("count-" + entityId)
+        .thenApply(v -> v.isPresent() ? v.get().content().getLong("count") : 0);
   }
 
   public static class TestEntityReadSideProcessor extends ReadSideProcessor<TestEntity.Evt> {
@@ -45,26 +45,33 @@ public class TestEntityReadSide {
 
     @Override
     public ReadSideProcessor.ReadSideHandler<TestEntity.Evt> buildHandler() {
-      return readSide.<TestEntity.Evt>builder("testoffsets")
+      return readSide
+          .<TestEntity.Evt>builder("testoffsets")
           .setGlobalPrepare(session -> CompletableFuture.completedFuture(Done.getInstance()))
-          .setPrepare((session, tag) -> CompletableFuture.supplyAsync(() -> {
-            prepared = true;
-            return Done.getInstance();
-          }))
+          .setPrepare(
+              (session, tag) ->
+                  CompletableFuture.supplyAsync(
+                      () -> {
+                        prepared = true;
+                        return Done.getInstance();
+                      }))
           .setEventHandler(TestEntity.Appended.class, this::updateCount)
           .build();
     }
 
-    private CompletionStage<Done> updateCount(CouchbaseSession session, TestEntity.Appended event, Offset offset) {
-      return getCount(session, event.getEntityId()).thenComposeAsync(count -> {
-        if (!prepared) {
-          throw new IllegalStateException("Prepare handler hasn't been called");
-        }
-        JsonObject content = JsonObject.create().put("count", count + 1);
-        return session
-            .upsert(JsonDocument.create("count-" + event.getEntityId(), content))
-            .thenApply(d -> Done.getInstance());
-      });
+    private CompletionStage<Done> updateCount(
+        CouchbaseSession session, TestEntity.Appended event, Offset offset) {
+      return getCount(session, event.getEntityId())
+          .thenComposeAsync(
+              count -> {
+                if (!prepared) {
+                  throw new IllegalStateException("Prepare handler hasn't been called");
+                }
+                JsonObject content = JsonObject.create().put("count", count + 1);
+                return session
+                    .upsert(JsonDocument.create("count-" + event.getEntityId(), content))
+                    .thenApply(d -> Done.getInstance());
+              });
     }
 
     @Override
@@ -72,5 +79,4 @@ public class TestEntityReadSide {
       return TestEntity.Evt.AGGREGATE_EVENT_SHARDS.allTags();
     }
   }
-
 }

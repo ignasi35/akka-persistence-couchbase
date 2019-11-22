@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Lightbend Inc. <http://www.lightbend.com>
+ * Copyright (C) 2018-2019 Lightbend Inc. <http://www.lightbend.com>
  */
 
 package akka.persistence.couchbase
@@ -21,7 +21,6 @@ class CouchbaseJournalSpec
     )
     with CouchbaseBucketSetup
     with WithLogCapturing {
-
   override def supportsRejectingNonSerializableObjects: CapabilityFlag =
     false // or CapabilityFlag.off
 

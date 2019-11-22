@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Lightbend Inc. <http://www.lightbend.com>
+ * Copyright (C) 2018-2019 Lightbend Inc. <http://www.lightbend.com>
  */
 
 package akka.persistence.couchbase.javadsl
@@ -26,7 +26,6 @@ import scala.compat.java8.FutureConverters._
 import akka.dispatch.ExecutionContexts
 
 object CouchbaseReadJournal {
-
   /**
    * The default identifier for [[CouchbaseReadJournal]] to be used with
    * `akka.persistence.query.PersistenceQuery#getReadJournalFor`.
@@ -63,7 +62,6 @@ final class CouchbaseReadJournal(scaladslReadJournal: scaladsl.CouchbaseReadJour
     with CurrentEventsByTagQuery
     with CurrentPersistenceIdsQuery
     with PersistenceIdsQuery {
-
   /**
    * Data Access Object for arbitrary queries or updates.
    */
@@ -93,9 +91,11 @@ final class CouchbaseReadJournal(scaladslReadJournal: scaladsl.CouchbaseReadJour
    * Corresponding query that is completed when it reaches the end of the currently
    * stored events is provided by `currentEventsByPersistenceId`.
    */
-  override def eventsByPersistenceId(persistenceId: String,
-                                     fromSequenceNr: Long,
-                                     toSequenceNr: Long): Source[EventEnvelope, NotUsed] =
+  override def eventsByPersistenceId(
+      persistenceId: String,
+      fromSequenceNr: Long,
+      toSequenceNr: Long
+  ): Source[EventEnvelope, NotUsed] =
     scaladslReadJournal.eventsByPersistenceId(persistenceId, fromSequenceNr, toSequenceNr).asJava
 
   /**
@@ -103,9 +103,11 @@ final class CouchbaseReadJournal(scaladslReadJournal: scaladsl.CouchbaseReadJour
    * is completed immediately when it reaches the end of the "result set". Events that are
    * stored after the query is completed are not included in the event stream.
    */
-  override def currentEventsByPersistenceId(persistenceId: String,
-                                            fromSequenceNr: Long,
-                                            toSequenceNr: Long): Source[EventEnvelope, NotUsed] =
+  override def currentEventsByPersistenceId(
+      persistenceId: String,
+      fromSequenceNr: Long,
+      toSequenceNr: Long
+  ): Source[EventEnvelope, NotUsed] =
     scaladslReadJournal.currentEventsByPersistenceId(persistenceId, fromSequenceNr, toSequenceNr).asJava
 
   /**

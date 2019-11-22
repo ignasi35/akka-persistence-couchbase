@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Lightbend Inc. <http://www.lightbend.com>
+ * Copyright (C) 2018-2019 Lightbend Inc. <http://www.lightbend.com>
  */
 
 package akka.persistence.couchbase
@@ -22,5 +22,4 @@ trait CouchbaseBucketSetup extends BeforeAndAfterAll { self: Suite =>
     clusterConnection.close()
     super.afterAll()
   }
-
 }

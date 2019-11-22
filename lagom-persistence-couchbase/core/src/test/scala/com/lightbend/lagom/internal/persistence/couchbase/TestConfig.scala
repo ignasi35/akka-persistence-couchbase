@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Lightbend Inc. <http://www.lightbend.com>
+ * Copyright (C) 2018-2019 Lightbend Inc. <http://www.lightbend.com>
  */
 
 package com.lightbend.lagom.internal.persistence.couchbase
@@ -8,7 +8,6 @@ import com.typesafe.config.{Config, ConfigFactory}
 import scala.collection.JavaConverters._
 
 object TestConfig {
-
   val ClusterConfig = """
     akka.actor.provider: cluster
     akka.remote.netty.tcp.hostname: 127.0.0.1

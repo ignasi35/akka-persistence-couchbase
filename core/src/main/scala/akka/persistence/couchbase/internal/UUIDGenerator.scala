@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Lightbend Inc. <http://www.lightbend.com>
+ * Copyright (C) 2018-2019 Lightbend Inc. <http://www.lightbend.com>
  */
 
 package akka.persistence.couchbase.internal
@@ -18,7 +18,6 @@ import scala.util.Random
  */
 @InternalApi
 private[akka] object UUIDGenerator {
-
   def extractMac(): Long = {
     // use first interface we find
     def firstAvailableMac(enumeration: java.util.Enumeration[NetworkInterface]): Array[Byte] =
@@ -40,12 +39,12 @@ private[akka] object UUIDGenerator {
   }
 
   def macAsLong(addressArray: Array[Byte]): Long = {
-    var address = 0xffL & addressArray(5)
-    address |= (0xffL & addressArray(4)) << 8
-    address |= (0xffL & addressArray(3)) << 16
-    address |= (0xffL & addressArray(2)) << 24
-    address |= (0xffL & addressArray(1)) << 32
-    address |= (0xffL & addressArray(0)) << 40
+    var address = 0xFFL & addressArray(5)
+    address |= (0xFFL & addressArray(4)) << 8
+    address |= (0xFFL & addressArray(3)) << 16
+    address |= (0xFFL & addressArray(2)) << 24
+    address |= (0xFFL & addressArray(1)) << 32
+    address |= (0xFFL & addressArray(0)) << 40
     address
   }
 
@@ -72,7 +71,6 @@ private[akka] object UUIDGenerator {
  */
 @InternalApi
 private[akka] final class UUIDGenerator(clockSeqAndNode: Long) {
-
   // makes sure we don't return the same timestamp twice
   private val lastTimeStamp = new AtomicLong(0L)
 
@@ -91,9 +89,7 @@ private[akka] final class UUIDGenerator(clockSeqAndNode: Long) {
     if (now > last) {
       if (lastTimeStamp.compareAndSet(last.nanoTimestamp, now.nanoTimestamp)) now
       else currentTimestamp() // lost cas, try again
-
     } else {
-
       val lastMs = last.toMs
       val candidate = last.next
 
@@ -111,7 +107,6 @@ private[akka] final class UUIDGenerator(clockSeqAndNode: Long) {
       } else if (lastTimeStamp.compareAndSet(last.nanoTimestamp, candidate.nanoTimestamp)) {
         candidate
       } else currentTimestamp() // lost the cas, try again
-
     }
   }
 
@@ -119,5 +114,4 @@ private[akka] final class UUIDGenerator(clockSeqAndNode: Long) {
     val timestamp = currentTimestamp()
     TimeBasedUUIDs.create(timestamp, clockSeqAndNode)
   }
-
 }

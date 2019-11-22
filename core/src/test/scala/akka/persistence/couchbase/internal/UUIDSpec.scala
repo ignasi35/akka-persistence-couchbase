@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Lightbend Inc. <http://www.lightbend.com>
+ * Copyright (C) 2018-2019 Lightbend Inc. <http://www.lightbend.com>
  */
 
 package akka.persistence.couchbase.internal
@@ -14,11 +14,9 @@ import scala.math.Ordering.comparatorToOrdering
 import scala.util.Random
 
 class UUIDSpec extends WordSpec with Matchers with ScalaFutures {
-
   override implicit def patienceConfig = PatienceConfig(5.seconds, 50.millis)
 
   "The time based UUIDs" should {
-
     "roundtrip a unix timestamp back into itself" in {
       val unixTimestamp = 1543410889L
       val result = UUIDTimestamp.fromUnixTimestamp(unixTimestamp).toUnixTimestamp

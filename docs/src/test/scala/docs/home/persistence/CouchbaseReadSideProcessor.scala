@@ -1,6 +1,7 @@
 /*
- * Copyright (C) 2009-2018 Lightbend Inc. <https://www.lightbend.com>
+ * Copyright (C) 2018-2019 Lightbend Inc. <http://www.lightbend.com>
  */
+
 package docs.home.persistence
 
 // #imports
@@ -18,7 +19,6 @@ import scala.concurrent.{ExecutionContext, Future}
 object CouchbaseReadSideProcessorInitial {
   //#initial
   class HelloEventProcessor extends ReadSideProcessor[HelloEvent] {
-
     override def buildHandler(): ReadSideProcessor.ReadSideHandler[HelloEvent] =
       // TODO build read side handler
       ???
@@ -31,10 +31,8 @@ object CouchbaseReadSideProcessorInitial {
 }
 
 object CouchbaseReadSideProcessorTwo {
-
   class HelloEventProcessor(readSide: CouchbaseReadSide)(implicit executionContext: ExecutionContext)
       extends ReadSideProcessor[HelloEvent] {
-
     //#tag
     override def aggregateTags: Set[AggregateEventTag[HelloEvent]] = HelloEvent.Tag.allTags
     //#tag
@@ -82,8 +80,10 @@ object CouchbaseReadSideProcessorTwo {
     }
 
     // #greeting-message-changed
-    def processGreetingMessageChanged(session: CouchbaseSession,
-                                      ese: EventStreamElement[HelloEvent.GreetingChanged]): Future[Done] =
+    def processGreetingMessageChanged(
+        session: CouchbaseSession,
+        ese: EventStreamElement[HelloEvent.GreetingChanged]
+    ): Future[Done] =
       session
         .get(DocId)
         .flatMap { maybeDoc =>
@@ -97,6 +97,5 @@ object CouchbaseReadSideProcessorTwo {
         }
         .map(_ => Done)
     // #greeting-message-changed
-
   }
 }

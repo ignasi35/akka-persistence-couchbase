@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Lightbend Inc. <http://www.lightbend.com>
+ * Copyright (C) 2018-2019 Lightbend Inc. <http://www.lightbend.com>
  */
 
 package com.lightbend.lagom.internal.javadsl.persistence.couchbase
@@ -45,7 +45,6 @@ private[couchbase] final class CouchbaseReadSideHandler[Event <: AggregateEvent[
     dispatcher: String
 )(implicit ec: ExecutionContext)
     extends ReadSideHandler[Event] {
-
   private val log = LoggerFactory.getLogger(this.getClass)
 
   @volatile
@@ -92,7 +91,6 @@ private[couchbase] final class CouchbaseReadSideHandler[Event <: AggregateEvent[
           )
 
         invoke(handler, event, offset).toScala
-
       }
       .withAttributes(ActorAttributes.dispatcher(dispatcher))
       .asJava

@@ -1,3 +1,7 @@
+/*
+ * Copyright (C) 2018-2019 Lightbend Inc. <http://www.lightbend.com>
+ */
+
 package jdocs.home.persistence;
 
 import java.util.Objects;
@@ -24,8 +28,7 @@ public final class UserGreeting {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     UserGreeting that = (UserGreeting) o;
-    return Objects.equals(user, that.user) &&
-        Objects.equals(message, that.message);
+    return Objects.equals(user, that.user) && Objects.equals(message, that.message);
   }
 
   @Override

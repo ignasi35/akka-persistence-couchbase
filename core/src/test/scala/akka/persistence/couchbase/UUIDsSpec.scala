@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Lightbend Inc. <http://www.lightbend.com>
+ * Copyright (C) 2018-2019 Lightbend Inc. <http://www.lightbend.com>
  */
 
 package akka.persistence.couchbase
@@ -10,7 +10,6 @@ import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.{Matchers, WordSpec}
 
 class UUIDsSpec extends WordSpec with Matchers with ScalaFutures {
-
   "UUIDs factory" should {
     "return NoOffset for zero timestamp" in {
       UUIDs.timeBasedUUIDFrom(0) should ===(NoOffset)

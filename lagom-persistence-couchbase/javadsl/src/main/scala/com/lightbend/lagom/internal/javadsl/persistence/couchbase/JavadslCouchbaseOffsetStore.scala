@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Lightbend Inc. <http://www.lightbend.com>
+ * Copyright (C) 2018-2019 Lightbend Inc. <http://www.lightbend.com>
  */
 
 package com.lightbend.lagom.internal.javadsl.persistence.couchbase
@@ -14,7 +14,8 @@ import javax.inject.{Inject, Singleton}
  * Internal API
  */
 @Singleton
-private[lagom] final class JavadslCouchbaseOffsetStore @Inject()(system: ActorSystem,
-                                                                 couchbase: CouchbaseSession,
-                                                                 config: ReadSideConfig)
-    extends CouchbaseOffsetStore(system, config, couchbase.asScala)
+private[lagom] final class JavadslCouchbaseOffsetStore @Inject() (
+    system: ActorSystem,
+    couchbase: CouchbaseSession,
+    config: ReadSideConfig
+) extends CouchbaseOffsetStore(system, config, couchbase.asScala)

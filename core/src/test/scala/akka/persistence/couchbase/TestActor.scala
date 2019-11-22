@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Lightbend Inc. <http://www.lightbend.com>
+ * Copyright (C) 2018-2019 Lightbend Inc. <http://www.lightbend.com>
  */
 
 package akka.persistence.couchbase
@@ -27,7 +27,6 @@ object TestActor {
 class TestActor(override val persistenceId: String, override val journalPluginId: String)
     extends PersistentActor
     with ActorLogging {
-
   var lastDelete: ActorRef = _
   var lastRecoveredEvent: String = _
 
@@ -37,7 +36,6 @@ class TestActor(override val persistenceId: String, override val journalPluginId
 
     case RecoveryCompleted =>
       log.debug("Recovery completed, lastRecoveredEvent: {}", lastRecoveredEvent)
-
   }
 
   val receiveCommand: Receive = {
@@ -55,12 +53,11 @@ class TestActor(override val persistenceId: String, override val journalPluginId
       val size = events.size
       val handler = {
         var count = 0
-        _: String =>
-          {
-            count += 1
-            if (count == size)
-              sender() ! "PersistAll-done"
-          }
+        _: String => {
+          count += 1
+          if (count == size)
+            sender() ! "PersistAll-done"
+        }
       }
       persistAll(events)(handler)
 
@@ -68,12 +65,11 @@ class TestActor(override val persistenceId: String, override val journalPluginId
       val size = events.size
       val handler = {
         var count = 0
-        evt: String =>
-          {
-            count += 1
-            if (count == size)
-              sender() ! "PersistAllAsync-done"
-          }
+        evt: String => {
+          count += 1
+          if (count == size)
+            sender() ! "PersistAllAsync-done"
+        }
       }
       persistAllAsync(events)(handler)
       sender() ! "PersistAllAsync-triggered"

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Lightbend Inc. <http://www.lightbend.com>
+ * Copyright (C) 2018-2019 Lightbend Inc. <http://www.lightbend.com>
  */
 
 package akka.persistence.couchbase
@@ -26,9 +26,7 @@ class CouchbaseJournalIntegrationSpec
     with Matchers
     with CouchbaseBucketSetup
     with WithLogCapturing {
-
   "The Couchbase Journal" must {
-
     "always replay to the latest written event" in {
       // even with outstanding writes - covers #140, and also that replay of a longer journal works
       val ref1 = system.actorOf(TestActor.props("latest-written"))
@@ -45,7 +43,5 @@ class CouchbaseJournalIntegrationSpec
       ref2 ! TestActor.GetLastRecoveredEvent
       expectMsg(10.seconds, "500")
     }
-
   }
-
 }

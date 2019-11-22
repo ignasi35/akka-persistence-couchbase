@@ -1,6 +1,10 @@
+/*
+ * Copyright (C) 2018-2019 Lightbend Inc. <http://www.lightbend.com>
+ */
+
 package jdocs.home.persistence;
 
-//#imports
+// #imports
 import akka.NotUsed;
 import akka.stream.alpakka.couchbase.javadsl.CouchbaseSession;
 import com.couchbase.client.java.document.json.JsonObject;
@@ -12,8 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 
-
-//#imports
+// #imports
 
 public interface CouchbaseReadSideQuery {
 
@@ -21,7 +24,7 @@ public interface CouchbaseReadSideQuery {
     ServiceCall<NotUsed, List<UserGreeting>> userGreetings();
   }
 
-  //#service-impl
+  // #service-impl
   public class GreetingServiceImpl implements GreetingService {
 
     private final CouchbaseSession session;
@@ -33,49 +36,54 @@ public interface CouchbaseReadSideQuery {
 
     @Override
     public ServiceCall<NotUsed, List<UserGreeting>> userGreetings() {
-      return request -> session.get("users-actual-greetings")
-          .thenApply(docOpt -> {
-            if (docOpt.isPresent()) {
-              JsonObject content = docOpt.get().content();
-              return content.getNames().stream().map(
-                  name -> new UserGreeting(name, content.getString(name))
-              ).collect(Collectors.toList());
-            } else {
-              return Collections.emptyList();
-            }
-          });
+      return request ->
+          session
+              .get("users-actual-greetings")
+              .thenApply(
+                  docOpt -> {
+                    if (docOpt.isPresent()) {
+                      JsonObject content = docOpt.get().content();
+                      return content.getNames().stream()
+                          .map(name -> new UserGreeting(name, content.getString(name)))
+                          .collect(Collectors.toList());
+                    } else {
+                      return Collections.emptyList();
+                    }
+                  });
     }
   }
-  //#service-impl
+  // #service-impl
 
   static class Wrap {
     public class GreetingServiceImpl implements GreetingService {
 
       private final CouchbaseSession session;
 
-      //#register-event-processor
+      // #register-event-processor
       @Inject
       public GreetingServiceImpl(CouchbaseSession couchbaseSession, ReadSide readSide) {
         this.session = couchbaseSession;
         readSide.register(CouchbaseHelloEventProcessor.HelloEventProcessor.class);
       }
-      //#register-event-processor
+      // #register-event-processor
 
       @Override
       public ServiceCall<NotUsed, List<UserGreeting>> userGreetings() {
-        return request -> session.get("users-actual-greetings")
-            .thenApply(docOpt -> {
-              if (docOpt.isPresent()) {
-                JsonObject content = docOpt.get().content();
-                return content.getNames().stream().map(
-                    name -> new UserGreeting(name, content.getString(name))
-                ).collect(Collectors.toList());
-              } else {
-                return Collections.emptyList();
-              }
-            });
+        return request ->
+            session
+                .get("users-actual-greetings")
+                .thenApply(
+                    docOpt -> {
+                      if (docOpt.isPresent()) {
+                        JsonObject content = docOpt.get().content();
+                        return content.getNames().stream()
+                            .map(name -> new UserGreeting(name, content.getString(name)))
+                            .collect(Collectors.toList());
+                      } else {
+                        return Collections.emptyList();
+                      }
+                    });
       }
     }
   }
-
 }

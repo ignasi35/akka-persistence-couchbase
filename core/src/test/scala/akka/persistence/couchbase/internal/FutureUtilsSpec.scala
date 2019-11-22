@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Lightbend Inc. <http://www.lightbend.com>
+ * Copyright (C) 2018-2019 Lightbend Inc. <http://www.lightbend.com>
  */
 
 package akka.persistence.couchbase.internal
@@ -12,9 +12,7 @@ import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class FutureUtilsSpec extends WordSpec with Matchers with ScalaFutures {
-
   "The future utils" must {
-
     "allow for sequential traversal" in {
       @volatile var counter = -1
 
@@ -24,7 +22,7 @@ class FutureUtilsSpec extends WordSpec with Matchers with ScalaFutures {
             Future {
               counter += 1
               (n, counter)
-          }
+            }
         )
         .futureValue
 
@@ -32,8 +30,6 @@ class FutureUtilsSpec extends WordSpec with Matchers with ScalaFutures {
         case (n, c) =>
           n should ===(c)
       }
-
     }
   }
-
 }

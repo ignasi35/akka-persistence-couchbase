@@ -92,5 +92,4 @@ object Dependencies {
     junit,
     junitInterface
   )
-
 }
