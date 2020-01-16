@@ -24,23 +24,35 @@ inThisBuild(
   )
 )
 
+def scalaCompilerOptions: Setting[_] = {
+  val basicOptions = Seq(
+    "-encoding",
+    "UTF-8", // yes, this is 2 args
+    "-feature",
+    "-unchecked",
+    "-deprecation",
+    "-Xlint",
+    "-Ywarn-dead-code",
+    "-Ywarn-numeric-widen",
+    "-Xfatal-warnings"
+  )
+
+  scalacOptions ++= {
+    // -Xfuture is deprecated: Not used since 2.13.
+    if (scalaVersion.value == Dependencies.Scala213) {
+      basicOptions
+    } else {
+      "-Xfuture" +: basicOptions
+    }
+  }
+}
+
 def common: Seq[Setting[_]] = Seq(
   crossScalaVersions := Seq(Dependencies.Scala213, Dependencies.Scala212, Dependencies.Scala211),
   scalaVersion := Dependencies.Scala212,
   crossVersion := CrossVersion.binary,
   scalafmtOnCompile := true,
-  scalacOptions ++= Seq(
-      "-encoding",
-      "UTF-8", // yes, this is 2 args
-      "-feature",
-      "-unchecked",
-      "-deprecation",
-      "-Xlint",
-      "-Ywarn-dead-code",
-      "-Ywarn-numeric-widen",
-      "-Xfuture",
-      "-Xfatal-warnings"
-    ),
+  scalaCompilerOptions,
   bintrayOrganization := Some("akka"),
   bintrayPackage := "akka-persistence-couchbase",
   bintrayRepository := (if (isSnapshot.value) "snapshots" else "maven"),
