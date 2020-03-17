@@ -341,7 +341,7 @@ final class CouchbaseReadJournal(eas: ExtendedActorSystem, config: Config, confi
         .map {
           case (ordering, doc) =>
             val persistenceId = doc.content().getString(CouchbaseSchema.Fields.PersistenceId)
-            import scala.collection.JavaConverters._
+            import scala.jdk.CollectionConverters._
             val messages = doc.content().getArray("messages").iterator().asScala
             val specificDoc = messages.find {
               case jo: JsonObject => jo.getString(CouchbaseSchema.Fields.Ordering) == ordering

@@ -12,7 +12,12 @@ object Dependencies {
   val AkkaVersion = "2.5.25"
   val AlpakkaCouchbaseVersion = "1.1.2"
   val LagomVersion = "1.5.4"
+
+  val ScalaCollectionCompat = "2.1.4"
+
   object Compile {
+    val scalaCollectionCompat = "org.scala-lang.modules" %% "scala-collection-compat" % ScalaCollectionCompat
+
     // used to easily convert rxjava into reactive streams and then into akka streams
     val rxJavaReactiveStreams = "io.reactivex" % "rxjava-reactive-streams" % "1.2.1" // Apache V2
 
@@ -52,6 +57,7 @@ object Dependencies {
   import TestDeps._
 
   val core = Seq(
+    scalaCollectionCompat,
     akkaActor,
     akkaPersistence,
     akkaPersistenceQuery,
